@@ -30,37 +30,26 @@ const fetchDatas = async () => {
         ).textContent = `${datas.description}`;
 
         // Ajout des options de couleurs avec le constructeur Option().
-
+        let optionColors = [`${datas.colors}`].length;
+        let option1 = [`${datas.colors.slice(0, 1)}`];
+        let option2 = [`${datas.colors.slice(1, 2)}`];
+        let option3 = [`${datas.colors.slice(2, 3)}`];
+        let option4 = [`${datas.colors.slice(3, 4)}`];
         let item_colors = document.getElementById("colors");
-        let options = ["0", "1", "2", "3"];
-        let element = `${datas.colors}`;
+        let options = [option1, option2, option3, option4];
+
         options.forEach(function (element, key) {
-          if (element == options) {
+          if ((element == option1, option2, option3, option4)) {
             item_colors[item_colors.options.length] = new Option(
               element,
               item_colors.options.length,
-              false,
+              true,
               false
             );
-          }
-          if (element == `${datas.colors}`) {
-            item_colors[item_colors.options.length] = new Option(
-              element,
-              item_colors.options.length,
-              true,
-              false
-            ); // Ajouter l'attribut "selected"
-          }
-          if (element == `${datas.colors}`) {
-            item_colors[item_colors.options.length] = new Option(
-              element,
-              item_colors.options.length,
-              true,
-              false
-            ); // Sélectionnera l'option
-          }
+          } // else ???????????
         });
         console.log(datas);
+        console.log(optionColors);
       })
     );
 };

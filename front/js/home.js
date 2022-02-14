@@ -20,7 +20,7 @@ const showDatas = async () => {
   let items = document.getElementById("items");
 
   for (let i = 0; i < datas.length; i++) {
-    //
+    // revoir la boucle en for in....
     // Création des elements 'a' 'article' 'img' 'h3' 'p' stockés dans des variables.
     //
     let link = document.createElement("a");
