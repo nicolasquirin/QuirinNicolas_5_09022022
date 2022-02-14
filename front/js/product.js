@@ -8,51 +8,63 @@ const urlSearcheParams = new URLSearchParams(queryString_url_id);
 const newUrlSearchParams = urlSearcheParams.get("id");
 console.log(newUrlSearchParams);
 
-// Inplantation des elements dans le DOM.
+let datas = [];
 
-let img = document.createElement("img");
-img.src = "/front/kanap01.jpeg";
-let div = document.getElementsByClassName(".item__img");
-img.appendChild;
-console.log(img);
+const fetchDatas = async () => {
+  await fetch(`http://localhost:3000/${newUrlSearchParams}`)
+    .then((res) => res.json())
+    .then(
+      (promise = (datas = promise) => {
+        // Inplantation des elements dans le DOM.
 
-document.getElementById("title").textContent = "Je suis le nom du...";
+        const img = document.createElement("img");
+        (img.src = `${datas.imageUrl}`), (img.alt = `${datas.altTxt}`);
+        document.querySelector(".item__img").appendChild(img);
 
-document.getElementById("price").textContent = "5555";
+        document.getElementById("title").textContent = `${datas.name}`;
 
-document.getElementById("description").textContent = "blablablablablaaaaaa";
+        document.getElementById("price").textContent = `${datas.price}`;
 
-// Ajout des options de couleurs avec le constructeur Option().
+        document.getElementById(
+          "description"
+        ).textContent = `${datas.description}`;
 
-let item_colors = document.getElementById("colors");
-let options = ["Vert", "Bleu", "Jaune"];
+        // Ajout des options de couleurs avec le constructeur Option().
 
-options.forEach(function (element, key) {
-  if (element == "Vert") {
-    item_colors[item_colors.options.length] = new Option(
-      element,
-      item_colors.options.length,
-      false,
-      false
+        let item_colors = document.getElementById("colors");
+        let options = ["0", "1", "2", "3"];
+        let element = `${datas.colors}`;
+        options.forEach(function (element, key) {
+          if (element == options) {
+            item_colors[item_colors.options.length] = new Option(
+              element,
+              item_colors.options.length,
+              false,
+              false
+            );
+          }
+          if (element == `${datas.colors}`) {
+            item_colors[item_colors.options.length] = new Option(
+              element,
+              item_colors.options.length,
+              true,
+              false
+            ); // Ajouter l'attribut "selected"
+          }
+          if (element == `${datas.colors}`) {
+            item_colors[item_colors.options.length] = new Option(
+              element,
+              item_colors.options.length,
+              true,
+              false
+            ); // Sélectionnera l'option
+          }
+        });
+        console.log(datas);
+      })
     );
-  }
-  if (element == "Bleu") {
-    item_colors[item_colors.options.length] = new Option(
-      element,
-      item_colors.options.length,
-      true,
-      false
-    ); // Ajouter l'attribut "selected"
-  }
-  if (element == "Jaune") {
-    item_colors[item_colors.options.length] = new Option(
-      element,
-      item_colors.options.length,
-      true,
-      false
-    ); // Sélectionnera l'option
-  }
-});
+};
+fetchDatas();
 
 /*
 
