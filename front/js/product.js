@@ -18,35 +18,31 @@ const fetchDatas = async () => {
         // Inplantation des elements dans le DOM.
 
         const img = document.createElement("img");
-        (img.src = `${datas.imageUrl}`), (img.alt = `${datas.altTxt}`);
+        (img.src = datas.imageUrl), (img.alt = datas.altTxt);
         document.querySelector(".item__img").appendChild(img);
-
-        document.getElementById("title").textContent = `${datas.name}`;
-
-        document.getElementById("price").textContent = `${datas.price}`;
-
-        document.getElementById(
-          "description"
-        ).textContent = `${datas.description}`;
+        document.getElementById("title").textContent = datas.name;
+        document.getElementById("price").textContent = datas.price;
+        document.getElementById("description").textContent = datas.description;
 
         // Ajout des options de couleurs avec le constructeur Option().
-        let optionColors = [`${datas.colors}`].length;
-        let option1 = [`${datas.colors.slice(0, 1)}`];
-        let option2 = [`${datas.colors.slice(1, 2)}`];
-        let option3 = [`${datas.colors.slice(2, 3)}`];
-        let option4 = [`${datas.colors.slice(3, 4)}`];
-        let item_colors = document.getElementById("colors");
-        let options = [option1, option2, option3, option4];
 
+        let optionColors = datas.colors;
+        let item_colors = document.getElementById("colors");
+        let options = [
+          optionColors[0],
+          optionColors[1],
+          optionColors[2],
+          optionColors[3],
+        ];
         options.forEach(function (element, key) {
-          if ((element == option1, option2, option3, option4)) {
+          if (element == optionColors[key]) {
             item_colors[item_colors.options.length] = new Option(
               element,
               item_colors.options.length,
-              true,
+              false,
               false
             );
-          } // else ???????????
+          }
         });
         console.log(datas);
         console.log(optionColors);
@@ -54,24 +50,3 @@ const fetchDatas = async () => {
     );
 };
 fetchDatas();
-
-/*
-
-let items = document.getElementsByClassName("item");
-
-let item_img = document.getElementsByClassName("item_img");
-let item_title = document.getElementById("title");
-let item_price = document.getElementById("price");
-let item_description = document.getElementById("description");
-let item_colors = document.getElementById("colors");
-
-// integration des elements dans le DOM.
-
-item_img.src = newUrlSearchParams.imageUrl;
-item_img.alt = newUrlSearchParams.altTxt;
-item_title.classList.add = "description";
-item_description.textContent = newUrlSearchParams.description;
-item_colors = newUrlSearchParams.colors;
-
-console.log(item_description);
-*/
