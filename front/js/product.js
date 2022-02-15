@@ -29,13 +29,7 @@ const fetchDatas = async () => {
         //
         let optionColors = datas.colors;
         let item_colors = document.getElementById("colors");
-        let options = [
-          optionColors[0],
-          optionColors[1],
-          optionColors[2],
-          optionColors[3],
-        ];
-        options.forEach(function (element, key) {
+        optionColors.forEach(function (element, key) {
           if (element == optionColors[key]) {
             item_colors[item_colors.options.length] = new Option(
               element,
