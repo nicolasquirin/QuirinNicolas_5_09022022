@@ -21,46 +21,54 @@ const fetchDatas = async () => {
         const img = document.createElement("img");
         (img.src = datas.imageUrl), (img.alt = datas.altTxt);
         document.querySelector(".item__img").appendChild(img);
-        document.getElementById("title").textContent = datas.name;
+        item_name = document.getElementById("title").textContent = datas.name;
         document.getElementById("price").textContent = datas.price;
         document.getElementById("description").textContent = datas.description;
         //
-        // Ajout des options de couleurs avec le constructeur Option().
+        // Ajout des options de couleurs avec une boucle forEach.
         //
         let optionColors = datas.colors;
         let item_colors = document.getElementById("colors");
         optionColors.forEach(function (element, key) {
-          if (element == optionColors[key]) {
-            item_colors[item_colors.options.length] = new Option(
-              element,
-              item_colors.options.length,
-              false,
-              false
-            );
-          }
+          item_colors[item_colors.options.length] = new Option(element);
         });
-        console.log(datas);
         console.log(optionColors);
       })
     );
   addBasket(datas);
 };
 //
-// Initialisation de l'affichage des donées API du produit selectionné(ID) pour product.html
+// Initialisation de l'affichage des donées API du produit selectionné(ID) pour product.html.
 //
 fetchDatas();
 
 //
-// Ajout du produit
+// Ajout des produits avec options dans le localStorage.
 //
 
 const addBasket = () => {
   let clickButton = document.getElementById("addToCart");
   clickButton.addEventListener("click", () => {
     let optionColors = document.getElementById("colors");
-    let quantityProduct = document.getElementById("quantity");
+    let itemName = document.getElementById("title");
+    let itemQuantity = document.getElementById("quantity");
     let productStorage = JSON.parse(localStorage.getItem("productStorage"));
-
+    //
+    // Ajout de la valeur du titre produit dans le localStorage.
+    //
+    const valueName = Object.assign({}, datas, {
+      item_name: `${itemName.textContent}`,
+    });
+    //
+    // Ajout de la valeur de quantité de produit dans le localStorage.
+    //
+    const valueQuantity = Object.assign({}, datas, {
+      item_quantity: `${itemQuantity.value}`,
+      quantity: 1,
+    });
+    //
+    // Ajout de la valeur des couleurs produit et sa quantitée dans le localStorage.
+    //
     const valueColor = Object.assign({}, datas, {
       item_colors: `${optionColors.value}`,
       quantity: 1,
@@ -70,8 +78,10 @@ const addBasket = () => {
 
     if (productStorage == null) {
       productStorage = [];
-      productStorage.push(valueColor);
+      productStorage.push[(valueColor, valueName, valueQuantity)];
       localStorage.setItem("productStorage", JSON.stringify(productStorage));
     }
+
+    console.log(valueName);
   });
 };
