@@ -21,7 +21,7 @@ const fetchDatas = async () => {
         const img = document.createElement("img");
         (img.src = datas.imageUrl), (img.alt = datas.altTxt);
         document.querySelector(".item__img").appendChild(img);
-        item_name = document.getElementById("title").textContent = datas.name;
+        document.getElementById("title").textContent = datas.name;
         document.getElementById("price").textContent = datas.price;
         document.getElementById("description").textContent = datas.description;
         //
@@ -32,7 +32,6 @@ const fetchDatas = async () => {
         optionColors.forEach(function (element) {
           item_colors[item_colors.options.length] = new Option(element);
         });
-        console.log(optionColors);
       })
     );
 };
@@ -57,32 +56,58 @@ clickButton.addEventListener("click", (event) => {
     id: id,
     color: colors.value,
     quantity: quantity.value,
+    name: document.getElementById("title").textContent,
+    imageUrl: document.querySelector(".item__img"),
+    imageAlt: document.querySelector(".item__img").lastElementChild.alt,
+    description: document.getElementById("description").textContent,
+    price: document.getElementById("price").textContent,
+
+  
   };
 
-  console.log(objectProduct);
-
-  //window.location.href = './cart.html';
-
+  
   //
   // Envoi des produits dans le local Storage en le 'Parssant'.
   //
 
   let productInStorage = JSON.parse(localStorage.getItem("product"));
 
-  if (productInStorage) {
+  // Fonction pour ajouter les produits dans le localStorage.
+
+  const addInStorage = () => {
     productInStorage.push(objectProduct);
     localStorage.setItem("product", JSON.stringify(productInStorage));
+  };
+  // //////////////////////////////////////////////////////////////// A VOIR !!!!!!!!!!!!!!!!!
+  const addQuantity = () => {
+    let foundProduct = productInStorage.find((p) => p.id == objectProduct.id);
+    if (foundProduct != undefined) {
+      foundProduct.quantity++;
+    } else {
+      productInStorage.quantity = 1;
+      productInStorage.push(objectProduct);
+    }
+  };
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  if (productInStorage) {
+    addInStorage();
+    addQuantity();
   } else {
     productInStorage = [];
-    productInStorage.push(objectProduct);
-    localStorage.setItem("product", JSON.stringify(productInStorage));
+    addInStorage();
   }
+  //
+  // Envoi du client sur la page panier(cart.html).
+  //
+
+  window.location.href = "./cart.html";
 });
 
 //
 //
 //
 
+/*
 function saveBasket(basket) {
   localStorage.setItem("basket", JSON.stringify(basket));
 }
@@ -144,3 +169,4 @@ function totalPrice() {
   }
   return total;
 }
+*/
