@@ -45,18 +45,38 @@ fetchDatas();
 // Ajout des produits avec options dans le localStorage.
 //
 
-let clickButton = document.getElementById("addToCart");
-clickButton.addEventListener("click", () => {
+const id = newUrlSearchParams;
+const colors = document.getElementById("colors");
+const quantity = document.getElementById("quantity");
+const clickButton = document.getElementById("addToCart");
+
+clickButton.addEventListener("click", (event) => {
+  event.preventDefault();
+
+  let objectProduct = {
+    id: id,
+    color: colors.value,
+    quantity: quantity.value,
+  };
+
+  console.log(objectProduct);
+
   //window.location.href = './cart.html';
 
-  let id = newUrlSearchParams;
-  addBasket(id);
-  let colors = document.getElementById("colors");
-  addBasket(colors);
-  totalProduct(colors);
-  let quantity = document.getElementById("quantity");
-  addBasket(quantity);
-  totalProduct(quantity);
+  //
+  // Envoi des produits dans le local Storage en le 'Parssant'.
+  //
+
+  let productInStorage = JSON.parse(localStorage.getItem("product"));
+
+  if (productInStorage) {
+    productInStorage.push(objectProduct);
+    localStorage.setItem("product", JSON.stringify(productInStorage));
+  } else {
+    productInStorage = [];
+    productInStorage.push(objectProduct);
+    localStorage.setItem("product", JSON.stringify(productInStorage));
+  }
 });
 
 //
