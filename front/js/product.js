@@ -65,32 +65,25 @@ clickButton.addEventListener("click", (event) => {
   // Envoi des produits dans le local Storage en le 'Parssant'.
   //
 
-  let productInStorage = JSON.parse(localStorage.getItem("objetcProduct"));
+  let productInStorage = JSON.parse(localStorage.getItem("Keyproduct"));
 
   // Fonction pour ajouter les produits dans le localStorage.
 
+  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ITERATION DE LA QUANTITE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   const addInStorage = () => {
     productInStorage.push(objectProduct);
-    localStorage.setItem("product", JSON.stringify(productInStorage));
-  };
-  // //////////////////////////////////////////////////////////////// A VOIR !!!!!!!!!!!!!!!!!
-  const addQuantity = () => {
+    localStorage.setItem("Keyproduct", JSON.stringify(productInStorage));
+
     let foundProduct = productInStorage.find((p) => p.id == objectProduct.id);
     if (foundProduct != undefined) {
       foundProduct.quantity++;
     } else {
-      productInStorage.quantity = 1;
+      objectProduct.quantity = 1;
       productInStorage.push(objectProduct);
     }
   };
-  //////////////////////////////////////////////////////////////////////////////////////////////////
-  if (productInStorage) {
-    addInStorage();
-    
-  } else {
-    productInStorage = [];
-    addInStorage();
-  }
+  addInStorage();
+
   //
   // Envoi du client sur la page panier(cart.html).
   //
@@ -102,6 +95,7 @@ clickButton.addEventListener("click", (event) => {
 //
 //
 
+// EXAMPLE DU WEBINAIRE
 /*
 function saveBasket(basket) {
   localStorage.setItem("basket", JSON.stringify(basket));

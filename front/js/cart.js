@@ -1,7 +1,29 @@
-let productInStorage = JSON.parse(localStorage.getItem("product"));
+// récupération des produits API => interdit dans localStorage.
+
+const fetchDatas = async () => {
+  datas = await fetch("http://localhost:3000")
+    .then((res) => res.json())
+    .catch((error) =>
+      alert("Erreur de chargement des produits de l'API  : " + error)
+    );
+};
+
+const showDatas = async () => {
+  await fetchDatas();
+  for (let l = 0; l < datas.length; l++) {}
+  console.log(datas);
+};
+
+// Recupération des produits du localStorage.
+
+let productInStorage = JSON.parse(localStorage.getItem("Keyproduct"));
 
 for (j = 0; j < productInStorage.length; j++) {
   let items = document.getElementById("cart__items");
+
+  //
+  // Création des elements dans le DOM par la méthode textContent car innerHTML interdite.
+  //
 
   const newArticle = document.createElement("article");
   let newDiv1 = document.createElement("div");
@@ -34,25 +56,29 @@ for (j = 0; j < productInStorage.length; j++) {
   newDiv4.classList.add("cart__item__content__settings");
   newDiv5.classList.add("cart__item__content__settings__quantity");
   newDiv6.classList.add("cart__item__content__settings__delete");
-  newInput.classList.add("itemQuantity");
   newP4.classList.add("deleteItem");
   //
-  newImg.src = "/front/kanap01.jpeg";
-  newImg = productInStorage[j].altTxt;
+  //
+  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!PHOTOS MANQUANTE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  newImg.src = `/front/kanap01.jpeg`;
+
   newH2.textContent = productInStorage[j].name;
   newP1.textContent = productInStorage[j].color;
   newP2.textContent = productInStorage[j].price + ` € `;
   newP3.textContent = ` Qté : `;
-  newInput.classList.add("itemQuantity");
+
   newP4.textContent = `Suprimer`;
   total1.textContent = productInStorage[j].quantity;
   total2.textContent = productInStorage[j].price;
-  (newInput.type = Number),
-    (newInput.value = 42),
-    (newInput.minLength = "1"),
-    (newInput.maxLength = "100");
-  // MANQUE LE MIN ET MAX !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  //  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!INPUT MIN ET MAX !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 }
+
+// Iteration des prix produit.
+
+let totalPriceTab = [];
+
+for (let k = 0; k < productInStorage.length; k++) {}
 
 // Supression des articles du panier avec la methode filter.
 
@@ -63,12 +89,15 @@ for (let i = 0; i < supBtn.length; i++) {
     e.preventDefault();
 
     let id_sup = productInStorage[i].id;
-    console.log(id_sup);
-
     productInStorage = productInStorage.filter((el) => el.id !== id_sup);
 
-    // mise a jour du localStorage ???
-    localStorage.setItem("product", JSON.stringify(productInStorage));
-    console.log(productInStorage);
+    // mise a jour du localStorage.
+    localStorage.setItem("Keyproduct", JSON.stringify(productInStorage));
+    console.log("ici" + id_sup);
+
+    alert("Votre produit à bien été suprimer du panier !");
+    window.location.href = "cart.html";
   });
 }
+
+showDatas();
