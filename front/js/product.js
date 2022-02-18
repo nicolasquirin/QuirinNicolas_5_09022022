@@ -57,20 +57,15 @@ clickButton.addEventListener("click", (event) => {
     color: colors.value,
     quantity: quantity.value,
     name: document.getElementById("title").textContent,
-    imageUrl: document.querySelector(".item__img"),
     imageAlt: document.querySelector(".item__img").lastElementChild.alt,
     description: document.getElementById("description").textContent,
-    price: document.getElementById("price").textContent,
-
-  
   };
 
-  
   //
   // Envoi des produits dans le local Storage en le 'Parssant'.
   //
 
-  let productInStorage = JSON.parse(localStorage.getItem("product"));
+  let productInStorage = JSON.parse(localStorage.getItem("objetcProduct"));
 
   // Fonction pour ajouter les produits dans le localStorage.
 
@@ -91,7 +86,7 @@ clickButton.addEventListener("click", (event) => {
   //////////////////////////////////////////////////////////////////////////////////////////////////
   if (productInStorage) {
     addInStorage();
-    addQuantity();
+    
   } else {
     productInStorage = [];
     addInStorage();
