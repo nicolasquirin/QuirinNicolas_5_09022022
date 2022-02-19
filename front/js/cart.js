@@ -15,10 +15,11 @@ const showDatas = async () => {
 };
 
 // Recupération des produits du localStorage.
+let productInStorage = [];
+productInStorage = JSON.parse(localStorage.getItem("basket"));
+for (let u = 0; u < productInStorage.length; u++) {
+  console.log(productInStorage[u]);
 
-let productInStorage = JSON.parse(localStorage.getItem("Keyproduct"));
-
-for (j = 0; j < productInStorage.length; j++) {
   let items = document.getElementById("cart__items");
 
   //
@@ -62,18 +63,17 @@ for (j = 0; j < productInStorage.length; j++) {
   // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!PHOTOS MANQUANTE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   newImg.src = `/front/kanap01.jpeg`;
 
-  newH2.textContent = productInStorage[j].name;
-  newP1.textContent = productInStorage[j].color;
-  newP2.textContent = productInStorage[j].price + ` € `;
-  newP3.textContent = ` Qté : `;
+  //newH2.textContent = productInStorage.name;
+  newP1.textContent = productInStorage[u].color;
+  newP2.textContent = productInStorage[u].price + ` € `;
+  newP3.textContent = ` Qté : ${productInStorage[u].quantity}`;
 
   newP4.textContent = `Suprimer`;
-  total1.textContent = productInStorage[j].quantity;
-  total2.textContent = productInStorage[j].price;
+  total1.textContent = productInStorage.quantity;
+  total2.textContent = productInStorage.price;
 
   //  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!INPUT MIN ET MAX !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 }
-
 // Iteration des prix produit.
 
 let totalPriceTab = [];
@@ -92,12 +92,10 @@ for (let i = 0; i < supBtn.length; i++) {
     productInStorage = productInStorage.filter((el) => el.id !== id_sup);
 
     // mise a jour du localStorage.
-    localStorage.setItem("Keyproduct", JSON.stringify(productInStorage));
+    localStorage.setItem("basket", JSON.stringify(productInStorage));
     console.log("ici" + id_sup);
 
     alert("Votre produit à bien été suprimer du panier !");
     window.location.href = "cart.html";
   });
 }
-
-showDatas();

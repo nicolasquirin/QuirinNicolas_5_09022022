@@ -52,37 +52,49 @@ const clickButton = document.getElementById("addToCart");
 clickButton.addEventListener("click", (event) => {
   event.preventDefault();
 
-  let objectProduct = {
+  let product = {
     id: id,
     color: colors.value,
     quantity: quantity.value,
-    name: document.getElementById("title").textContent,
-    imageAlt: document.querySelector(".item__img").lastElementChild.alt,
-    description: document.getElementById("description").textContent,
   };
-
   //
-  // Envoi des produits dans le local Storage en le 'Parssant'.
+  // Initialisation de l'API navigateur LocalStorage
   //
 
-  let productInStorage = JSON.parse(localStorage.getItem("Keyproduct"));
-
-  // Fonction pour ajouter les produits dans le localStorage.
-
-  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ITERATION DE LA QUANTITE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  const addInStorage = () => {
-    productInStorage.push(objectProduct);
-    localStorage.setItem("Keyproduct", JSON.stringify(productInStorage));
-
-    let foundProduct = productInStorage.find((p) => p.id == objectProduct.id);
+  function saveBasket(basket) {
+    localStorage.setItem("basket", JSON.stringify(basket));
+  }
+  function getBasket() {
+    let basket = localStorage.getItem("basket");
+    if (basket == null) {
+      return [];
+    } else {
+      return JSON.parse(basket);
+    }
+  }
+  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ITERATION DE LA QUANTITE ET LA COULEUR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  function addBasket(product) {
+    let basket = getBasket();
+    let foundProduct = basket.find((p) => p.id == product.id);
     if (foundProduct != undefined) {
       foundProduct.quantity++;
     } else {
-      objectProduct.quantity = 1;
-      productInStorage.push(objectProduct);
+      product.quantity = 1;
+      basket.push(product);
     }
-  };
-  addInStorage();
+    saveBasket(basket);
+  }
+  addBasket(product);
+
+  function wrongInput(e) {
+    if (colors.value == "" || quantity.value == 0) {
+      alert("SVP, choisissez une couleur et un nombre d'article valide");
+      e.stopPropagation();
+    } else {
+      return true;
+    }
+  }
+  wrongInput();
 
   //
   // Envoi du client sur la page panier(cart.html).
@@ -100,7 +112,6 @@ clickButton.addEventListener("click", (event) => {
 function saveBasket(basket) {
   localStorage.setItem("basket", JSON.stringify(basket));
 }
-
 function getBasket() {
   let basket = localStorage.getItem("basket");
   if (basket == null) {
@@ -109,7 +120,6 @@ function getBasket() {
     return JSON.parse(basket);
   }
 }
-
 function addBasket(product) {
   let basket = getBasket();
   let foundProduct = basket.find((p) => p.id == product.id);
@@ -121,13 +131,11 @@ function addBasket(product) {
   }
   saveBasket(basket);
 }
-
 function removeBasket(product) {
   let basket = getBasket();
   basket = basket.filter((p) => p.id != product.id);
   saveBasket(basket);
 }
-
 function changeQuantity(product, quantity) {
   let basket = getBasket();
   let foundProduct = basket.find((p) => p.id == product.id);
@@ -140,7 +148,6 @@ function changeQuantity(product, quantity) {
     }
   }
 }
-
 function totalProduct() {
   let basket = getBasket();
   let number = 0;
@@ -149,7 +156,6 @@ function totalProduct() {
   }
   return number;
 }
-
 function totalPrice() {
   let basket = getBasket();
   let total = 0;
