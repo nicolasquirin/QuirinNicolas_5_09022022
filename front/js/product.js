@@ -76,12 +76,14 @@ clickButton.addEventListener("click", (event) => {
   function addBasket(product) {
     let basket = getBasket();
     let foundProduct = basket.find((p) => p.id == product.id);
-    if (foundProduct != undefined) {
-      foundProduct.quantity++;
+    let foundColor = basket.find((p) => p.color == product.color);
+    if (foundProduct != undefined || foundColor != undefined) {
+      foundProduct.quantity++ || foundColor.quantity++;
     } else {
-      product.quantity = 1;
+      product.quantity = 1 || product.color == 1;
       basket.push(product);
     }
+
     saveBasket(basket);
   }
   addBasket(product);
@@ -91,7 +93,7 @@ clickButton.addEventListener("click", (event) => {
       alert("SVP, choisissez une couleur et un nombre d'article valide");
       e.stopPropagation();
     } else {
-      return true;
+      return;
     }
   }
   wrongInput();
