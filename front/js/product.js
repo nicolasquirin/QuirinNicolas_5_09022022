@@ -24,6 +24,9 @@ const fetchDatas = async () => {
         document.getElementById("title").textContent = datas.name;
         document.getElementById("price").textContent = datas.price;
         document.getElementById("description").textContent = datas.description;
+        let Pquantity = (document.getElementById("quantity").valueAsNumber =
+          "");
+
         //
         // Ajout des options de couleurs avec une boucle forEach.
         //
@@ -46,8 +49,12 @@ fetchDatas();
 
 const id = newUrlSearchParams;
 const colors = document.getElementById("colors");
-const quantity = document.getElementById("quantity");
+Pquantity = document.getElementById("quantity");
+
 const clickButton = document.getElementById("addToCart");
+
+console.log(Pquantity);
+// Déclaration avant envoie des details produits : id, couleurs, et quantité.
 
 clickButton.addEventListener("click", (event) => {
   event.preventDefault();
@@ -55,9 +62,45 @@ clickButton.addEventListener("click", (event) => {
   let product = {
     id: id,
     color: colors.value,
-    quantity: quantity.value,
+    quantity: quantity.valueAsNumber,
   };
-  //
+
+  /*
+  Pquantity.addEventListener("change", (e) => {
+    if (e.target.value != "" || e.target.value != 0) {
+      quantity.value = parseInt(e.target.value);
+    }
+  });
+
+  */
+
+  function addQuantity() {
+    let qttModif = document.querySelectorAll(".itemQuantity");
+
+    for (let k = 0; k < qttModif.length; k++) {
+      qttModif[k].addEventListener("change", (event) => {
+        event.preventDefault();
+
+        // Changement de l'élement en fonction de son id/couleur
+
+        let quantityModif = product.quantity[k].quantity;
+        let qttModifValue = qttModif[k].valueAsNumber;
+
+        const resultFind = product.find(
+          (el) => el.qttModifValue !== quantityModif
+        );
+
+        resultFind.quantity = qttModifValue;
+        product[k].quantiteProduit = resultFind.quantity;
+
+        localStorage.setItem("basket", JSON.stringify(product));
+        // reload la page
+        location.reload();
+      });
+    }
+  }
+  addQuantity();
+
   // Initialisation de l'API du navigateur => LocalStorage
   //
 
@@ -85,12 +128,6 @@ clickButton.addEventListener("click", (event) => {
       basket.push(product);
     }
 
-    if (foundProduct > 1) {
-      foundProduct.quantity * quantity.value;
-    } else {
-      product.quantity = 1;
-    }
-
     saveBasket(basket);
   }
   addBasket(product);
@@ -113,8 +150,8 @@ clickButton.addEventListener("click", (event) => {
 
   window.location.href = "./cart.html";
 });
+console.log(quantity);
 
-//
 //
 //
 

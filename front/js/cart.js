@@ -92,7 +92,7 @@ async function fetchDatas() {
 
     // Supression des articles du panier avec la methode filter.
 
-    let cartArticle = newArticle; 
+    let cartArticle = newArticle;
 
     cartArticle = document.getElementsByClassName("cart__item");
     let supBtn = document.querySelectorAll(".deleteItem");
@@ -101,12 +101,12 @@ async function fetchDatas() {
         e.preventDefault();
 
         let id_sup = productInStorage[u].id;
-        productInStorage = productInStorage.filter((el) => el.id != id_sup || el.color != productInStorage[u].color);
-        
+        productInStorage = productInStorage.filter(
+          (el) => el.id != id_sup || el.color != productInStorage[u].color
+        );
 
         // mise a jour du localStorage.
         localStorage.setItem("basket", JSON.stringify(productInStorage));
-      
 
         alert("Votre produit à bien été suprimer du panier !");
         window.location.href = "cart.html";
@@ -115,3 +115,65 @@ async function fetchDatas() {
   }
 }
 fetchDatas();
+
+// Formulaire de saisie.
+//
+// Recuperation des noeuds des elements dans le DOM.
+
+inputFN = document.querySelectorAll("cart__order__form__question input")[0];
+inputLN = document.querySelectorAll("cart__order__form__question input")[0];
+inputAddress = document.querySelectorAll(
+  "cart__order__form__question input"
+)[0];
+inputCity = document.querySelectorAll("cart__order__form__question input")[0];
+inputEmail = document.querySelectorAll("cart__order__form__question input")[0];
+// Erreur :
+errFN = document.querySelectorAll("cart__order__form__question p")[0];
+errLN = document.querySelectorAll("cart__order__form__question p")[1];
+errAddress = document.querySelectorAll("cart__order__form__question p")[2];
+errCity = document.querySelectorAll("cart__order__form__question p")[3];
+errEmail = document.querySelectorAll("cart__order__form__question p")[4];
+
+// Recupération des elements pour envoie.
+
+subBtn = document.getElementById("order");
+validForm = false;
+inputFN.addEventListener("change", (e) => {
+  validFN(e.target.value);
+  contact.firstName = e.target.value;
+});
+
+inputLN.addEventListener("change", (e) => {
+  validLN(e.target.value);
+  contact.lastName = e.target.value;
+});
+
+inputAddress.addEventListener("change", (e) => {
+  validAddress(e.target.value);
+  contact.adress = e.target.value;
+});
+
+inputCity.addEventListener("change", (e) => {
+  validCity(e.target.value);
+  contact.city = e.target.value;
+});
+
+inputEmail.addEventListener("change", (e) => {
+  validEmail(e.target.value);
+  contact.email = e.target.value;
+});
+
+// Fonction de vérification Regexp.
+
+function validFN(firstName) {
+  if (firstName.length == 0) {
+    errFN.innerHTML = "Prenom non renseigné";
+    validForm = false;
+  } else if (!/[0-9]/.test(firstName)) {
+    errFN.innerHTML = "";
+    validForm = true;
+  } else {
+    errFN.innerHTML = "Votre prénom doit contenir que des lettres";
+    validForm = false;
+  }
+}
