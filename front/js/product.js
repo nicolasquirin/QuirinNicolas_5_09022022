@@ -76,11 +76,10 @@ clickButton.addEventListener("click", (event) => {
   function addBasket(product) {
     let basket = getBasket();
     let foundProduct = basket.find((p) => p.id == product.id);
-    let foundColor = basket.find((p) => p.color == product.color);
-    if (foundProduct != undefined || foundColor != undefined) {
-      foundProduct.quantity++ || foundColor.quantity++;
+    if (foundProduct != undefined) {
+      foundProduct.quantity++;
     } else {
-      product.quantity = 1 || product.color == 1;
+      product.quantity = 1;
       basket.push(product);
     }
 
