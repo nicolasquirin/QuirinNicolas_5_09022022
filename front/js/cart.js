@@ -3,24 +3,31 @@
 // Recuperer le datas de L'api pour Image, nom, prix, et altTxt de image.
 //
 // Recupération des produits du localStorage.
+
 let productInStorage = JSON.parse(localStorage.getItem("basket"));
+
 async function fetchDatas() {
+  let items = document.getElementById("cart__items");
   for (let datas of productInStorage) {
-    await fetch`http://localhost:3000/`
+    await fetch(`http://localhost:3000/${datas.id}`)
       .then((res) => res.json())
-      .then((datas) => (datas = productInStorage))
+      .then(
+        (data) => (
+          (productInStorage.name = data.name),
+          (productInStorage.price = data.price),
+          (productInStorage.imageUrl = data.imageUrl),
+          (productInStorage.altTxt = data.altTxt)
+        )
+      )
       .catch((error) =>
         alert("Erreur de chargement des produits de l'API  : " + error)
       );
 
-    console.log(productInStorage + datas);
-    console.log(datas);
-    dataStorage = productInStorage;
-
-    let items = document.getElementById("cart__items");
+    console.log(productInStorage);
+    console.log(datas.color);
 
     //
-    // Création des elements dans le DOM par la méthode textContent car innerHTML interdite.
+    // Création des elements dans le DOM par la méthode textContent car innerHTML interdite par OC.
     //
 
     const newArticle = document.createElement("article");
@@ -60,48 +67,51 @@ async function fetchDatas() {
     //
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!PHOTOS MANQUANTE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-    newH2.textContent = datas[i].name;
-    //newP1.textContent = productInStorage.color;
-    newP2.textContent = datas[i].price + ` € `;
+    newH2.textContent = productInStorage.name;
+    newP1.textContent = datas.color;
+    newP2.textContent = productInStorage.price + ` € `;
     newP3.textContent = ` Qté : `;
-    newImg.src = datas[i].imageUrl;
-    newImg.alt = datas[i].altTxt;
+    newImg.src = productInStorage.imageUrl;
+    newImg.alt = productInStorage.altTxt;
     newInput.setAttribute = ("name", "itemQuantity");
     newInput.setAttribute = ("type", "number");
     newInput.setAttribute = ("min", "1");
     newInput.setAttribute = ("max", "100");
     newInput.setAttribute = "value";
     newP4.textContent = `Suprimer`;
-    //total1.textContent = productInStorage.quantity;
-    //total2.textContent = productInStorage.price;
+    total1.textContent = datas.quantity;
+    total2.textContent = productInStorage.price;
 
     //  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!INPUT MIN ET MAX !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+    // Iteration des prix produit.
+
+    let totalPriceTab = [];
+
+    //for (let k = 0; k < productInStorage.length; k++) {}
+
+    // Supression des articles du panier avec la methode filter.
+
+    let cartArticle = newArticle; 
+
+    cartArticle = document.getElementsByClassName("cart__item");
+    let supBtn = document.querySelectorAll(".deleteItem");
+    for (let u = 0; u < supBtn.length; u++) {
+      supBtn[u].addEventListener("click", (e) => {
+        e.preventDefault();
+
+        let id_sup = productInStorage[u].id;
+        productInStorage = productInStorage.filter((el) => el.id != id_sup || el.color != productInStorage[u].color);
+        
+
+        // mise a jour du localStorage.
+        localStorage.setItem("basket", JSON.stringify(productInStorage));
+      
+
+        alert("Votre produit à bien été suprimer du panier !");
+        window.location.href = "cart.html";
+      });
+    }
   }
-}
-
-// Iteration des prix produit.
-
-let totalPriceTab = [];
-
-//for (let k = 0; k < productInStorage.length; k++) {}
-
-// Supression des articles du panier avec la methode filter.
-
-newArticle = document.getElementsByClassName("cart__item");
-let supBtn = document.querySelectorAll(".deleteItem");
-for (let u = 0; u < supBtn.length; u++) {
-  supBtn[u].addEventListener("click", (e) => {
-    e.preventDefault();
-
-    let id_sup = productInStorage[u].id;
-    productInStorage = productInStorage.filter((el) => el.id !== id_sup);
-
-    // mise a jour du localStorage.
-    localStorage.setItem("basket", JSON.stringify(productInStorage));
-    console.log("ici" + id_sup);
-
-    alert("Votre produit à bien été suprimer du panier !");
-    window.location.href = "cart.html";
-  });
 }
 fetchDatas();

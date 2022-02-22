@@ -58,7 +58,7 @@ clickButton.addEventListener("click", (event) => {
     quantity: quantity.value,
   };
   //
-  // Initialisation de l'API navigateur LocalStorage
+  // Initialisation de l'API du navigateur => LocalStorage
   //
 
   function saveBasket(basket) {
@@ -72,10 +72,12 @@ clickButton.addEventListener("click", (event) => {
       return JSON.parse(basket);
     }
   }
-  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ITERATION DE LA QUANTITE ET LA COULEUR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  // Addition des articles avec prise en compte de la couleur.
   function addBasket(product) {
     let basket = getBasket();
-    let foundProduct = basket.find((p) => p.id == product.id);
+    let foundProduct = basket.find(
+      (p) => p.id == product.id && p.id == product.color
+    );
     if (foundProduct != undefined) {
       foundProduct.quantity++;
     } else {
@@ -83,9 +85,17 @@ clickButton.addEventListener("click", (event) => {
       basket.push(product);
     }
 
+    if (foundProduct > 1) {
+      foundProduct.quantity * quantity.value;
+    } else {
+      product.quantity = 1;
+    }
+
     saveBasket(basket);
   }
   addBasket(product);
+
+  // Fonction qui block les articles ou couleurs indéfini a la commande.
 
   function wrongInput(e) {
     if (colors.value == "" || quantity.value == 0) {
