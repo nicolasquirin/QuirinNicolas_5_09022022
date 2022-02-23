@@ -3,7 +3,7 @@
 // Recuperer le datas de L'api pour Image, nom, prix, et altTxt de image.
 //
 // Recupération des produits du localStorage.
-
+let datas = [""];
 let productInStorage = JSON.parse(localStorage.getItem("basket"));
 
 async function fetchDatas() {
@@ -120,24 +120,33 @@ fetchDatas();
 //
 // Recuperation des noeuds des elements dans le DOM.
 
-inputFN = document.querySelectorAll("cart__order__form__question input")[0];
-inputLN = document.querySelectorAll("cart__order__form__question input")[0];
+inputFN = document.querySelectorAll(".cart__order__form__question input")[0];
+inputLN = document.querySelectorAll(".cart__order__form__question input")[1];
 inputAddress = document.querySelectorAll(
-  "cart__order__form__question input"
-)[0];
-inputCity = document.querySelectorAll("cart__order__form__question input")[0];
-inputEmail = document.querySelectorAll("cart__order__form__question input")[0];
+  ".cart__order__form__question input"
+)[2];
+inputCity = document.querySelectorAll(".cart__order__form__question input")[3];
+inputEmail = document.querySelectorAll(".cart__order__form__question input")[4];
 // Erreur :
-errFN = document.querySelectorAll("cart__order__form__question p")[0];
-errLN = document.querySelectorAll("cart__order__form__question p")[1];
-errAddress = document.querySelectorAll("cart__order__form__question p")[2];
-errCity = document.querySelectorAll("cart__order__form__question p")[3];
-errEmail = document.querySelectorAll("cart__order__form__question p")[4];
+errFN = document.querySelectorAll(".cart__order__form__question p")[0];
+errLN = document.querySelectorAll(".cart__order__form__question p")[1];
+errAddress = document.querySelectorAll(".cart__order__form__question p")[2];
+errCity = document.querySelectorAll(".cart__order__form__question p")[3];
+errEmail = document.querySelectorAll(".cart__order__form__question p")[4];
+
+let contact = {
+  firstName: "",
+  lastName: "",
+  address: "",
+  city: "",
+  email: "",
+};
 
 // Recupération des elements pour envoie.
 
 subBtn = document.getElementById("order");
 validForm = false;
+
 inputFN.addEventListener("change", (e) => {
   validFN(e.target.value);
   contact.firstName = e.target.value;
@@ -150,7 +159,7 @@ inputLN.addEventListener("change", (e) => {
 
 inputAddress.addEventListener("change", (e) => {
   validAddress(e.target.value);
-  contact.adress = e.target.value;
+  contact.address = e.target.value;
 });
 
 inputCity.addEventListener("change", (e) => {
@@ -163,7 +172,7 @@ inputEmail.addEventListener("change", (e) => {
   contact.email = e.target.value;
 });
 
-// Fonction de vérification Regexp.
+// Fonction de vérification Regex.
 
 function validFN(firstName) {
   if (firstName.length == 0) {
@@ -173,7 +182,105 @@ function validFN(firstName) {
     errFN.innerHTML = "";
     validForm = true;
   } else {
-    errFN.innerHTML = "Votre prénom doit contenir que des lettres";
+    errFN.innerHTML = "Votre prénom ne peut contenir que des lettres";
     validForm = false;
   }
 }
+
+function validLN(lastName) {
+  if (lastName.length == 0) {
+    errLN.innerHTML = "Nom de famille non renseigné";
+    validForm = false;
+  } else if (!/[0-9]/.test(lastName)) {
+    errLN.innerHTML = "";
+    validForm = true;
+  } else {
+    errLN.innerHTML = "Votre Nom ne peut contenir que des lettres";
+    validForm = false;
+  }
+}
+function validAddress(address) {
+  if (address.length == 0) {
+    errAddress.innerHTML = "Addresse non renseigné";
+    validForm = false;
+  } else {
+    errAddress.innerHTML = "";
+    validForm = true;
+  }
+}
+
+function validCity(city) {
+  if (city.length == 0) {
+    errCity.innerHTML = "Ville non renseigné";
+    validForm = false;
+  } else {
+    errCity.innerHTML = "";
+    validForm = true;
+  }
+}
+
+function validEmail(email) {
+  let emailReg = new RegExp(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/);
+  if (email.length == 0) {
+    errEmail.innerHTML = "E-mail non renseigné";
+    validForm = false;
+  } else if (emailReg.test(email)) {
+    errEmail.innerHTML = "";
+    validForm = true;
+  } else {
+    errEmail.innerHTML = "E-mail non valide";
+    validForm = false;
+  }
+}
+
+// Click Evenlisstener formulaire client.
+
+subBtn.addEventListener("click", (e) => {
+  e.preventDefault();
+  // Envoie objet 'contact + array 'products' par methode fetch a l'API.
+
+  async function sendForm() {
+    await fetch("http://localhost:3000/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ contact, datas }),
+    })
+      // Recupération de la réponse.
+      .then(function (response) {
+        return response.json();
+      })
+
+      .then(function (datas) {
+        orderId = datas.orderId;
+      });
+    if (orderId != undefined || orderId != "") {
+      location.href = "confirmation.html?" + orderId + "#orderId";
+    }
+  }
+  console.log(response.json);
+
+  function collectDatas() {
+    for (let data of productInStorage) {
+      datas.push(datas.id);
+    }
+  }
+  // Verification des champ de saisie avant envoie.
+
+  if (validForm) {
+    if (productInStorage) {
+      alert = "Commande en cours";
+      collectDatas();
+      sendForm();
+    } else {
+      alert = "Votre panier est vide";
+    }
+  } else {
+    validFN(inputFN.value);
+    validLN(inputLN.value);
+    validFN(inputAddress.value);
+    validFN(inputCity.value);
+    validFN(inputEmail.value);
+  }
+});
