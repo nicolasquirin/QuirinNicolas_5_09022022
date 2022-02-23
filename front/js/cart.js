@@ -3,7 +3,7 @@
 // Recuperer le datas de L'api pour Image, nom, prix, et altTxt de image.
 //
 // Recupération des produits du localStorage.
-let datas = [""];
+let datas = [];
 let productInStorage = JSON.parse(localStorage.getItem("basket"));
 
 async function fetchDatas() {
@@ -141,6 +141,9 @@ let contact = {
   city: "",
   email: "",
 };
+orderId = undefined;
+products = [""];
+inputError = 0;
 
 // Recupération des elements pour envoie.
 
@@ -239,40 +242,40 @@ subBtn.addEventListener("click", (e) => {
   e.preventDefault();
   // Envoie objet 'contact + array 'products' par methode fetch a l'API.
 
-  async function sendForm() {
-    await fetch("http://localhost:3000/", {
+  let clientData = (contact, products) => {
+    fetch("http://localhost:3000/api/products/order", {
       method: "POST",
+      body: JSON.stringify({ contact, products }),
       headers: {
+        Accept: "application/json",
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ contact, datas }),
     })
       // Recupération de la réponse.
-      .then(function (response) {
-        return response.json();
+      .then((response) => response.json())
+      .then((data) => {
+        window.location = `../html/confirmation.html?id=${data.orderId}`;
+        return false;
       })
-
-      .then(function (datas) {
-        orderId = datas.orderId;
-      });
-    if (orderId != undefined || orderId != "") {
-      location.href = "confirmation.html?" + orderId + "#orderId";
-    }
-  }
-  console.log(response.json);
+      // REPONSE DATA INCORECT - LA DEMANDE EST MAUVAISE
+      .catch((error) =>
+        alert("Erreur de chargement des produits de l'API  : " + error)
+      );
+  };
 
   function collectDatas() {
-    for (let data of productInStorage) {
-      datas.push(datas.id);
+    for (let product of productInStorage) {
+      products.push(product.id);
     }
   }
-  // Verification des champ de saisie avant envoie.
+
+  // Verification des champs de saisie avant envoie.
 
   if (validForm) {
     if (productInStorage) {
       alert = "Commande en cours";
       collectDatas();
-      sendForm();
+      clientData();
     } else {
       alert = "Votre panier est vide";
     }
