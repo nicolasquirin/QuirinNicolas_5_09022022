@@ -1,10 +1,17 @@
+let productInStorage = JSON.parse(localStorage.getItem("basket"));
+
+if (location.href.search("confirmation") > 0) {
+  orderId = window.location.search.replace("?", "");
+  document.getElementById("orderId").innerHTML = orderId;
+  localStorage.removeItem("basket");
+}
+
 // récupération des produits API => interdite dans localStorage.
 
 // Recuperer le datas de L'api pour Image, nom, prix, et altTxt de image.
 //
 // Recupération des produits du localStorage.
 let datas = [];
-let productInStorage = JSON.parse(localStorage.getItem("basket"));
 
 async function fetchDatas() {
   let items = document.getElementById("cart__items");
@@ -120,7 +127,7 @@ fetchDatas();
 //
 // Recuperation des noeuds des elements dans le DOM.
 
-inputFN = document.querySelectorAll(".cart__order__form__question input")[0];
+inputFN = document.querySelectorAll(".cart__order__form__question input")[0]; // ??????????????????????
 inputLN = document.querySelectorAll(".cart__order__form__question input")[1];
 inputAddress = document.querySelectorAll(
   ".cart__order__form__question input"
@@ -143,6 +150,8 @@ contact = {
 };
 
 products = [];
+orderId = undefined;
+inputError = 0;
 
 // Recupération des elements pour envoie.
 
@@ -256,6 +265,8 @@ subBtn.addEventListener("click", (e) => {
 
       .then(function (data) {
         orderId = data.orderId;
+        localStorage.setItem("orderId", data.orderId);
+        console.log(orderId);
       });
 
     if (orderId != undefined || orderId != "") {
@@ -266,8 +277,9 @@ subBtn.addEventListener("click", (e) => {
   }
 
   function collectDatas() {
-    for (let data of productInStorage) {
-      products.push(data.id);
+    for (let datas of productInStorage) {
+      products.push(datas.id);
+      console.log(datas.id);
     }
   }
 
@@ -276,7 +288,7 @@ subBtn.addEventListener("click", (e) => {
   if (validForm) {
     if (productInStorage) {
       alert("Commande en cours");
-      collectDatas();
+      collectDatas(products);
       clientData();
     } else {
       alert = "Votre panier est vide";
@@ -287,13 +299,5 @@ subBtn.addEventListener("click", (e) => {
     validFN(inputAddress.value);
     validFN(inputCity.value);
     validFN(inputEmail.value);
-  }
-
-  if (location.href.search("confirmation") > 0) {
-    orderId = window.location.search.replace("?", "");
-    orderId = document.getElementById("orderId").innerHTML;
-    localStorage.removeItem("basket");
-  } else {
-    alert(" Panier Vide");
   }
 });
