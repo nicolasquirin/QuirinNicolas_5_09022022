@@ -134,16 +134,15 @@ errAddress = document.querySelectorAll(".cart__order__form__question p")[2];
 errCity = document.querySelectorAll(".cart__order__form__question p")[3];
 errEmail = document.querySelectorAll(".cart__order__form__question p")[4];
 
-let contact = {
+contact = {
   firstName: "",
   lastName: "",
   address: "",
   city: "",
   email: "",
 };
-orderId = undefined;
-products = [""];
-inputError = 0;
+
+products = [];
 
 // Recupération des elements pour envoie.
 
@@ -242,30 +241,33 @@ subBtn.addEventListener("click", (e) => {
   e.preventDefault();
   // Envoie objet 'contact + array 'products' par methode fetch a l'API.
 
-  let clientData = (contact, products) => {
-    fetch("http://localhost:3000/api/products/order", {
+  async function clientData() {
+    await fetch("http://localhost:3000/api/products/order", {
       method: "POST",
-      body: JSON.stringify({ contact, products }),
       headers: {
-        Accept: "application/json",
         "Content-Type": "application/json",
       },
+      body: JSON.stringify({ contact: contact, products: products }),
     })
       // Recupération de la réponse.
-      .then((response) => response.json())
-      .then((data) => {
-        window.location = `../html/confirmation.html?id=${data.orderId}`;
-        return false;
+      .then(function (response) {
+        return response.json();
       })
-      // REPONSE DATA INCORECT - LA DEMANDE EST MAUVAISE
-      .catch((error) =>
-        alert("Erreur de chargement des produits de l'API  : " + error)
-      );
-  };
+
+      .then(function (data) {
+        orderId = data.orderId;
+      });
+
+    if (orderId != undefined || orderId != "") {
+      location.href = "confirmation.html?" + orderId + "#orderId";
+    } else {
+      alert = "Erreur lors du chargement de vos données";
+    }
+  }
 
   function collectDatas() {
-    for (let product of productInStorage) {
-      products.push(product.id);
+    for (let data of productInStorage) {
+      products.push(data.id);
     }
   }
 
@@ -273,7 +275,7 @@ subBtn.addEventListener("click", (e) => {
 
   if (validForm) {
     if (productInStorage) {
-      alert = "Commande en cours";
+      alert("Commande en cours");
       collectDatas();
       clientData();
     } else {
@@ -285,5 +287,13 @@ subBtn.addEventListener("click", (e) => {
     validFN(inputAddress.value);
     validFN(inputCity.value);
     validFN(inputEmail.value);
+  }
+
+  if (location.href.search("confirmation") > 0) {
+    orderId = window.location.search.replace("?", "");
+    orderId = document.getElementById("orderId").innerHTML;
+    localStorage.removeItem("basket");
+  } else {
+    alert(" Panier Vide");
   }
 });
