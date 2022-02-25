@@ -80,11 +80,12 @@ async function fetchDatas() {
     newP3.textContent = ` Qté : `;
     newImg.src = productInStorage.imageUrl;
     newImg.alt = productInStorage.altTxt;
-    newInput.setAttribute = ("name", "itemQuantity");
-    newInput.setAttribute = ("type", "number");
-    newInput.setAttribute = ("min", "1");
-    newInput.setAttribute = ("max", "100");
-    newInput.setAttribute = "value";
+
+    newInput.setAttribute("name", "itemQuantity");
+    newInput.setAttribute("type", "number");
+    newInput.setAttribute("min", "1");
+    newInput.setAttribute("max", "100");
+    newInput.setAttribute("value", productInStorage.quantity);
     newP4.textContent = `Suprimer`;
     total1.textContent = datas.quantity;
     total2.textContent = productInStorage.price;
@@ -103,6 +104,7 @@ async function fetchDatas() {
 
     cartArticle = document.getElementsByClassName("cart__item");
     let supBtn = document.querySelectorAll(".deleteItem");
+    let quantity = document.querySelectorAll(".itemQuantity"); // quantity!!!!!!!!!!!!!!!
     for (let u = 0; u < supBtn.length; u++) {
       supBtn[u].addEventListener("click", (e) => {
         e.preventDefault();
@@ -291,7 +293,9 @@ subBtn.addEventListener("click", (e) => {
       collectDatas(products);
       clientData();
     } else {
-      alert("Votre panier est vide, vous allez être redirigé sur la page d'accueil");
+      alert(
+        "Votre panier est vide, vous allez être redirigé sur la page d'accueil"
+      );
       window.location.href = "home.html";
     }
   } else {

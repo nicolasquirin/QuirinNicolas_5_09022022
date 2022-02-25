@@ -51,6 +51,7 @@ let id = newUrlSearchParams;
 let colors = document.getElementById("colors");
 let quantity = document.getElementById("quantity");
 
+
 const clickButton = document.getElementById("addToCart");
 
 console.log(quantity);
@@ -85,17 +86,21 @@ clickButton.addEventListener("click", (event) => {
   //
   function addBasket(product) {
     let basket = getBasket();
-    let foundProduct = basket.find((p) => (p.id = product.id = product.color));
+    let foundProduct = basket.find((p) => (p.id = product.id));
 
-    if (foundProduct != undefined) {
+    if (foundProduct = 1) {
       foundProduct.quantity++;
-    } else if (product.color != undefined) {
-      product.quantity = 1;
+
+    } else if (foundProduct <= 1) {
+      foundProduct.quantity++;
+
+    } else if (foundProduct = 0) {
+      foundProduct.quantity = 1;
     } else {
+
     }
 
     basket.push(product);
-
     saveBasket(basket);
   }
 
