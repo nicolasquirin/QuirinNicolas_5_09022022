@@ -291,7 +291,8 @@ subBtn.addEventListener("click", (e) => {
       collectDatas(products);
       clientData();
     } else {
-      alert = "Votre panier est vide";
+      alert("Votre panier est vide, vous allez être redirigé sur la page d'accueil");
+      window.location.href = "home.html";
     }
   } else {
     validFN(inputFN.value);

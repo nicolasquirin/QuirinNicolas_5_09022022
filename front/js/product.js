@@ -47,13 +47,13 @@ fetchDatas();
 // Ajout des produits avec options dans le localStorage.
 //
 
-const id = newUrlSearchParams;
-const colors = document.getElementById("colors");
-Pquantity = document.getElementById("quantity");
+let id = newUrlSearchParams;
+let colors = document.getElementById("colors");
+let quantity = document.getElementById("quantity");
 
 const clickButton = document.getElementById("addToCart");
 
-console.log(Pquantity);
+console.log(quantity);
 // Déclaration avant envoie des details produits : id, couleurs, et quantité.
 
 clickButton.addEventListener("click", (event) => {
@@ -64,16 +64,44 @@ clickButton.addEventListener("click", (event) => {
     color: colors.value,
     quantity: quantity.valueAsNumber,
   };
+  console.log(quantity.valueAsNumber);
+
+  // Initialisation de l'API du navigateur => LocalStorage
+  //
+
+  function saveBasket(basket) {
+    localStorage.setItem("basket", JSON.stringify(basket));
+  }
+  function getBasket() {
+    let basket = localStorage.getItem("basket");
+    if (basket == null) {
+      return [];
+    } else {
+      return JSON.parse(basket);
+    }
+  }
+  //
+  // Addition des articles avec prise en compte de la couleur.
+  //
+  function addBasket(product) {
+    let basket = getBasket();
+    let foundProduct = basket.find((p) => (p.id = product.id = product.color));
+
+    if (foundProduct != undefined) {
+      foundProduct.quantity++;
+    } else if (product.color != undefined) {
+      product.quantity = 1;
+    } else {
+    }
+
+    basket.push(product);
+
+    saveBasket(basket);
+  }
+
+  addBasket(product);
 
   /*
-  Pquantity.addEventListener("change", (e) => {
-    if (e.target.value != "" || e.target.value != 0) {
-      quantity.value = parseInt(e.target.value);
-    }
-  });
-
-  */
-
   function addQuantity() {
     let qttModif = document.querySelectorAll(".itemQuantity");
 
@@ -91,46 +119,17 @@ clickButton.addEventListener("click", (event) => {
         );
 
         resultFind.quantity = qttModifValue;
-        product[k].quantiteProduit = resultFind.quantity;
+        product[k].Pquantity = resultFind.quantity;
 
-        localStorage.setItem("basket", JSON.stringify(product));
+        localStorage.setItem("basket", JSON.stringify(basket));
         // reload la page
         location.reload();
       });
+      console.log(product[k].quantity);
     }
   }
   addQuantity();
-
-  // Initialisation de l'API du navigateur => LocalStorage
-  //
-
-  function saveBasket(basket) {
-    localStorage.setItem("basket", JSON.stringify(basket));
-  }
-  function getBasket() {
-    let basket = localStorage.getItem("basket");
-    if (basket == null) {
-      return [];
-    } else {
-      return JSON.parse(basket);
-    }
-  }
-  // Addition des articles avec prise en compte de la couleur.
-  function addBasket(product) {
-    let basket = getBasket();
-    let foundProduct = basket.find(
-      (p) => p.id == product.id && p.id == product.color
-    );
-    if (foundProduct != undefined) {
-      foundProduct.quantity++;
-    } else {
-      product.quantity = 1;
-      basket.push(product);
-    }
-
-    saveBasket(basket);
-  }
-  addBasket(product);
+  */
 
   // Fonction qui block les articles ou couleurs indéfini a la commande.
 
