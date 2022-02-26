@@ -1,5 +1,17 @@
 let productInStorage = JSON.parse(localStorage.getItem("basket"));
 
+function saveBasket(basket) {
+  localStorage.setItem("basket", JSON.stringify(basket));
+}
+function getBasket() {
+  let basket = localStorage.getItem("basket");
+  if (basket == null) {
+    return [];
+  } else {
+    return JSON.parse(basket);
+  }
+}
+
 if (location.href.search("confirmation") > 0) {
   orderId = window.location.search.replace("?", "");
   document.getElementById("orderId").innerHTML = orderId;
@@ -92,43 +104,83 @@ async function fetchDatas() {
 
     //  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!INPUT MIN ET MAX !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+    /*
+  function addQuantity() {
+    let qttModif = document.querySelectorAll(".itemQuantity");
+
+    for (let k = 0; k < qttModif.length; k++) {
+      qttModif[k].addEventListener("change", (event) => {
+        event.preventDefault();
+
+        // Changement de l'élement en fonction de son id/couleur
+
+        let quantityModif = product.quantity[k].quantity;
+        let qttModifValue = qttModif[k].valueAsNumber;
+
+        const resultFind = product.find(
+          (el) => el.qttModifValue !== quantityModif
+        );
+
+        resultFind.quantity = qttModifValue;
+        product[k].Pquantity = resultFind.quantity;
+
+        localStorage.setItem("basket", JSON.stringify(basket));
+        // reload la page
+        location.reload();
+      });
+      console.log(product[k].quantity);
+    }
+  }
+  addQuantity();
+  */
+
     // Iteration des prix produit.
 
     let totalPriceTab = [];
 
     //for (let k = 0; k < productInStorage.length; k++) {}
 
+    //
     // Supression des articles du panier avec la methode filter.
-
+    //
     let cartArticle = newArticle;
 
     cartArticle = document.getElementsByClassName("cart__item");
     let supBtn = document.querySelectorAll(".deleteItem");
     let quantity = document.querySelectorAll(".itemQuantity"); // quantity!!!!!!!!!!!!!!!
+
     for (let u = 0; u < supBtn.length; u++) {
+      let productDeleted = productInStorage[u].id;
+      let colorId = productInStorage[u].color;
       supBtn[u].addEventListener("click", (e) => {
         e.preventDefault();
 
-        let id_sup = productInStorage[u].id;
-        productInStorage = productInStorage.filter(
-          (el) => el.id != id_sup || el.color != productInStorage[u].color
+        let delet = productDeleted.filter(
+          (el) => el.id === productDeleted && el.color === colorId
         );
+
+        // MEME SYSTEM QUE POUR ADDPRODUCT !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! add et sup ==
 
         // mise a jour du localStorage.
         localStorage.setItem("basket", JSON.stringify(productInStorage));
+        saveBasket();
 
         alert("Votre produit à bien été suprimer du panier !");
         window.location.href = "cart.html";
       });
+      console.log(colorId);
     }
   }
 }
 fetchDatas();
 
-// Formulaire de saisie.
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! PANIER VIDE A FAIRE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+//////////////////////// FORMULAIRE ////////////////////////////////
+
 //
 // Recuperation des noeuds des elements dans le DOM.
-
+//
 inputFN = document.querySelectorAll(".cart__order__form__question input")[0]; // ??????????????????????
 inputLN = document.querySelectorAll(".cart__order__form__question input")[1];
 inputAddress = document.querySelectorAll(

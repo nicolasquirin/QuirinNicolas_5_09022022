@@ -24,9 +24,6 @@ const fetchDatas = async () => {
         document.getElementById("title").textContent = datas.name;
         document.getElementById("price").textContent = datas.price;
         document.getElementById("description").textContent = datas.description;
-        let Pquantity = (document.getElementById("quantity").valueAsNumber =
-          "");
-
         //
         // Ajout des options de couleurs avec une boucle forEach.
         //
@@ -48,9 +45,8 @@ fetchDatas();
 //
 
 let id = newUrlSearchParams;
-let colors = document.getElementById("colors");
+let colorOption = document.getElementById("colors");
 let quantity = document.getElementById("quantity");
-
 
 const clickButton = document.getElementById("addToCart");
 
@@ -62,7 +58,7 @@ clickButton.addEventListener("click", (event) => {
 
   let product = {
     id: id,
-    color: colors.value,
+    color: colorOption.value,
     quantity: quantity.valueAsNumber,
   };
   console.log(quantity.valueAsNumber);
@@ -81,72 +77,39 @@ clickButton.addEventListener("click", (event) => {
       return JSON.parse(basket);
     }
   }
-  //
-  // Addition des articles avec prise en compte de la couleur.
-  //
-  function addBasket(product) {
-    let basket = getBasket();
-    let foundProduct = basket.find((p) => (p.id = product.id));
-
-    if (foundProduct = 1) {
-      foundProduct.quantity++;
-
-    } else if (foundProduct <= 1) {
-      foundProduct.quantity++;
-
-    } else if (foundProduct = 0) {
-      foundProduct.quantity = 1;
-    } else {
-
-    }
-
-    basket.push(product);
-    saveBasket(basket);
-  }
-
-  addBasket(product);
-
-  /*
-  function addQuantity() {
-    let qttModif = document.querySelectorAll(".itemQuantity");
-
-    for (let k = 0; k < qttModif.length; k++) {
-      qttModif[k].addEventListener("change", (event) => {
-        event.preventDefault();
-
-        // Changement de l'élement en fonction de son id/couleur
-
-        let quantityModif = product.quantity[k].quantity;
-        let qttModifValue = qttModif[k].valueAsNumber;
-
-        const resultFind = product.find(
-          (el) => el.qttModifValue !== quantityModif
-        );
-
-        resultFind.quantity = qttModifValue;
-        product[k].Pquantity = resultFind.quantity;
-
-        localStorage.setItem("basket", JSON.stringify(basket));
-        // reload la page
-        location.reload();
-      });
-      console.log(product[k].quantity);
-    }
-  }
-  addQuantity();
-  */
 
   // Fonction qui block les articles ou couleurs indéfini a la commande.
 
   function wrongInput(e) {
-    if (colors.value == "" || quantity.value == 0) {
+    if (colors.value == "" || quantity.value <= 0) {
       alert("SVP, choisissez une couleur et un nombre d'article valide");
       e.stopPropagation();
     } else {
-      return;
     }
   }
   wrongInput();
+
+  //
+  // Addition des articles avec prise en compte du choix de la couleur.
+  //
+  function addBasket(product) {
+    let basket = getBasket();
+    let foundProduct = basket.find(
+      (p) => p.id === product.id && p.color === product.color
+    );
+
+    if (foundProduct != undefined) {
+      foundProduct.quantity += product.quantity;
+      alert(` Vous avez rajouté ${product.quantity} article(s) a votre panier`);
+    } else {
+      basket.push(product);
+      alert(`${product.quantity} Article(s) ajouté a votre panier`);
+    }
+
+    saveBasket(basket);
+  }
+
+  addBasket(product);
 
   //
   // Envoi du client sur la page panier(cart.html).
@@ -155,9 +118,6 @@ clickButton.addEventListener("click", (event) => {
   window.location.href = "./cart.html";
 });
 console.log(quantity);
-
-//
-//
 
 // EXAMPLE DU WEBINAIRE
 /*
