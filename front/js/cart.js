@@ -1,3 +1,6 @@
+//
+// Déclaration de la variable product In Storage associée au valeurs du local Storage.
+//
 let productInStorage = JSON.parse(localStorage.getItem("basket"));
 
 function saveBasket(basket) {
@@ -18,11 +21,9 @@ if (location.href.search("confirmation") > 0) {
   localStorage.removeItem("basket");
 }
 
-// récupération des produits API => interdite dans localStorage.
-
-// Recuperer le datas de L'api pour Image, nom, prix, et altTxt de image.
 //
-// Recupération des produits du localStorage.
+// Déclaration de la variable [datas] pour recevoir les valeurs interdite par (OC) dans le local Storage : image, altTxt, nom et prix.
+//
 let datas = [];
 
 async function fetchDatas() {
@@ -43,10 +44,9 @@ async function fetchDatas() {
       );
 
     console.log(productInStorage);
-    console.log(datas.color);
 
     //
-    // Création des elements dans le DOM par la méthode textContent car innerHTML interdite par OC.
+    // Déclaration des variables pour stockage des elements HTML créer dans le DOM.
     //
 
     const newArticle = document.createElement("article");
@@ -63,8 +63,8 @@ async function fetchDatas() {
     let newInput = document.createElement("input");
     let newDiv6 = document.createElement("div");
     let newP4 = document.createElement("p");
-    let total1 = document.getElementById("totalQuantity");
-    let total2 = document.getElementById("totalPrice");
+    let totalQuantity = document.getElementById("totalQuantity");
+    let totalPrice = document.getElementById("totalPrice");
     items.append(newArticle);
     newArticle.append(newDiv1, newDiv2);
     newDiv1.append(newImg);
@@ -83,9 +83,8 @@ async function fetchDatas() {
     newP4.classList.add("deleteItem");
     newInput.classList.add("itemQuantity");
     //
+    // Corrélation des élements a leurs valeurs recupéré dans [datas] et [product In Storage].
     //
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!PHOTOS MANQUANTE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
     newH2.textContent = productInStorage.name;
     newP1.textContent = datas.color;
     newP2.textContent = productInStorage.price + ` € `;
@@ -99,8 +98,6 @@ async function fetchDatas() {
     newInput.setAttribute("max", "100");
     newInput.setAttribute("value", productInStorage.quantity);
     newP4.textContent = `Suprimer`;
-    total1.textContent = datas.quantity;
-    total2.textContent = productInStorage.price;
 
     //  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!INPUT MIN ET MAX !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -136,64 +133,78 @@ async function fetchDatas() {
 
     // Iteration des prix produit.
 
-    let totalPriceTab = [];
-
     //for (let k = 0; k < productInStorage.length; k++) {}
 
     //
     // Supression des articles du panier avec la methode filter.
     //
-    let cartArticle = newArticle;
 
-    cartArticle = document.getElementsByClassName("cart__item");
-    let supBtn = document.querySelectorAll(".deleteItem");
-    let quantity = document.querySelectorAll(".itemQuantity"); // quantity!!!!!!!!!!!!!!!
+    let cartItem = document.getElementsByClassName("cart__item");
+    let deleteItem = document.querySelectorAll(".deleteItem");
+    let itemQuantity = document.querySelectorAll(".itemQuantity");
 
-    for (let u = 0; u < supBtn.length; u++) {
-      let productDeleted = productInStorage[u].id;
-      let colorId = productInStorage[u].color;
-      supBtn[u].addEventListener("click", (e) => {
-        e.preventDefault();
+    for (let u = 0; u < cartItem.length; u++) {
+      let itemToDel = productInStorage[u];
+      let itemToDelQuantity = itemQuantity[u];
 
-        let delet = productDeleted.filter(
-          (el) => el.id === productDeleted && el.color === colorId
-        );
-
-        // MEME SYSTEM QUE POUR ADDPRODUCT !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! add et sup ==
-
-        // mise a jour du localStorage.
+      itemToDelQuantity.addEventListener("change", (e) => {
+        itemToDel.itemQuantity = parseInt(e.target.value);
         localStorage.setItem("basket", JSON.stringify(productInStorage));
-        saveBasket();
+      });
+    }
 
-        alert("Votre produit à bien été suprimer du panier !");
+    for (let k = 0; k < cartItem.length; k++) {
+      let supData = deleteItem[k];
+      let colorId = productInStorage[k].color;
+      let dataId = productInStorage[k].id;
+
+      supData.addEventListener("click", () => {
+        let filtration = productInStorage.filter(function (datas) {
+          return datas.id != dataId || datas.color != colorId;
+        });
+        productInStorage = filtration;
+      });
+    }
+
+    let basket = JSON.parse(localStorage.getItem("basket"));
+    let quantity = 0;
+    let price = 0;
+
+    for (datas of basket) {
+      quantity += parseInt(datas.quantity);
+      price += parseFloat(datas.price) * parseInt(datas.quantity);
+    }
+    console.log(price);
+    totalQuantity.textContent = quantity;
+    totalPrice.textContent = price;
+
+    /* alert("Votre produit à bien été suprimer du panier !");
         window.location.href = "cart.html";
       });
       console.log(colorId);
-    }
+    */
   }
 }
 fetchDatas();
 
-// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! PANIER VIDE A FAIRE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-//////////////////////// FORMULAIRE ////////////////////////////////
+////////////////////////////// FORMULAIRE ////////////////////////////////
 
 //
-// Recuperation des noeuds des elements dans le DOM.
+// Recuperation des noeuds elements dans le DOM avec son index.
 //
-inputFN = document.querySelectorAll(".cart__order__form__question input")[0]; // ??????????????????????
-inputLN = document.querySelectorAll(".cart__order__form__question input")[1];
+inputFN = document.querySelectorAll(".cart__order__form__question input")[0];
+inputLN = document.querySelectorAll(".cart__order__form__question input")[0];
 inputAddress = document.querySelectorAll(
   ".cart__order__form__question input"
-)[2];
-inputCity = document.querySelectorAll(".cart__order__form__question input")[3];
-inputEmail = document.querySelectorAll(".cart__order__form__question input")[4];
+)[0];
+inputCity = document.querySelectorAll(".cart__order__form__question input")[0];
+inputEmail = document.querySelectorAll(".cart__order__form__question input")[0];
 // Erreur :
 errFN = document.querySelectorAll(".cart__order__form__question p")[0];
-errLN = document.querySelectorAll(".cart__order__form__question p")[1];
-errAddress = document.querySelectorAll(".cart__order__form__question p")[2];
-errCity = document.querySelectorAll(".cart__order__form__question p")[3];
-errEmail = document.querySelectorAll(".cart__order__form__question p")[4];
+errLN = document.querySelectorAll(".cart__order__form__question p")[0];
+errAddress = document.querySelectorAll(".cart__order__form__question p")[0];
+errCity = document.querySelectorAll(".cart__order__form__question p")[0];
+errEmail = document.querySelectorAll(".cart__order__form__question p")[0];
 
 contact = {
   firstName: "",
@@ -206,9 +217,9 @@ contact = {
 products = [];
 orderId = undefined;
 inputError = 0;
-
-// Recupération des elements pour envoie.
-
+//
+// Déclaration et récupération des elements pour les evènements change.
+//
 subBtn = document.getElementById("order");
 validForm = false;
 
@@ -236,9 +247,9 @@ inputEmail.addEventListener("change", (e) => {
   validEmail(e.target.value);
   contact.email = e.target.value;
 });
-
-// Fonction de vérification Regex.
-
+//
+// Fonction de vérification Regex pour les valeurs contact.
+//
 function validFN(firstName) {
   if (firstName.length == 0) {
     errFN.innerHTML = "Prenom non renseigné";
@@ -297,13 +308,14 @@ function validEmail(email) {
     validForm = false;
   }
 }
-
-// Click Evenlisstener formulaire client.
-
+//
+// Fonction evènement Click du formulaire client avec un changement du comportement par défaut de l’élément(preventDefault).
+//
 subBtn.addEventListener("click", (e) => {
   e.preventDefault();
-  // Envoie objet 'contact + array 'products' par methode fetch a l'API.
-
+  //
+  // Envoie de la chaine de charactère 'contact' et du tableau [products] par methode POST a l'API.
+  //
   async function clientData() {
     await fetch("http://localhost:3000/api/products/order", {
       method: "POST",
@@ -312,7 +324,9 @@ subBtn.addEventListener("click", (e) => {
       },
       body: JSON.stringify({ contact: contact, products: products }),
     })
-      // Recupération de la réponse.
+      //
+      // Recupération de la réponse en JSON.
+      //
       .then(function (response) {
         return response.json();
       })
@@ -329,16 +343,18 @@ subBtn.addEventListener("click", (e) => {
       alert = "Erreur lors du chargement de vos données";
     }
   }
-
+  //
+  // Recupération du produit par ID dans le local storage.
+  //
   function collectDatas() {
     for (let datas of productInStorage) {
       products.push(datas.id);
       console.log(datas.id);
     }
   }
-
+  //
   // Verification des champs de saisie avant envoie.
-
+  //
   if (validForm) {
     if (productInStorage) {
       alert("Commande en cours");

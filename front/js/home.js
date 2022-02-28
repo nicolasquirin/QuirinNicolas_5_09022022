@@ -1,8 +1,8 @@
-// Creation de la variable (datas) comme contenant pour le future tableau de donnés.
+// Creation de la variable (datas) comme contenant pour le future tableau de donnés produits.
 
 let datas = [];
 //
-// Récupération asynchrone des données => localhost avec la methode (fetch).
+// Récupération asynchrone des ressources de l'API avec la methode (fetch).
 //
 const fetchDatas = async () => {
   datas = await fetch("http://localhost:3000")
@@ -21,7 +21,7 @@ const showDatas = async () => {
 
   for (let i = 0; i < datas.length; i++) {
     // revoir la boucle en for in....
-    // Création des elements 'a' 'article' 'img' 'h3' 'p' stockés dans des variables.
+    // Création des elements HTML 'a' 'article' 'img' 'h3' 'p' stockés dans des variables;
     //
     let link = document.createElement("a");
     let article_item = document.createElement("article");
@@ -29,7 +29,7 @@ const showDatas = async () => {
     let article_item_h3 = document.createElement("h3");
     let article_item_p = document.createElement("p");
     //
-    // integration des elements dans le DOM.
+    // integration des noeuds parents/enfants spécifié.
     //
     items.appendChild(link);
     link.appendChild(article_item);
