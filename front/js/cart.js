@@ -82,6 +82,7 @@ async function fetchDatas() {
     newDiv6.classList.add("cart__item__content__settings__delete");
     newP4.classList.add("deleteItem");
     newInput.classList.add("itemQuantity");
+
     //
     // Corrélation des élements a leurs valeurs recupéré dans [datas] et [product In Storage].
     //
@@ -96,49 +97,17 @@ async function fetchDatas() {
     newInput.setAttribute("type", "number");
     newInput.setAttribute("min", "1");
     newInput.setAttribute("max", "100");
-    newInput.setAttribute("value", productInStorage.quantity);
+    newInput.setAttribute("value", datas.quantity);
     newP4.textContent = `Suprimer`;
-
-    //  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!INPUT MIN ET MAX !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-    /*
-  function addQuantity() {
-    let qttModif = document.querySelectorAll(".itemQuantity");
-
-    for (let k = 0; k < qttModif.length; k++) {
-      qttModif[k].addEventListener("change", (event) => {
-        event.preventDefault();
-
-        // Changement de l'élement en fonction de son id/couleur
-
-        let quantityModif = product.quantity[k].quantity;
-        let qttModifValue = qttModif[k].valueAsNumber;
-
-        const resultFind = product.find(
-          (el) => el.qttModifValue !== quantityModif
-        );
-
-        resultFind.quantity = qttModifValue;
-        product[k].Pquantity = resultFind.quantity;
-
-        localStorage.setItem("basket", JSON.stringify(basket));
-        // reload la page
-        location.reload();
-      });
-      console.log(product[k].quantity);
-    }
-  }
-  addQuantity();
-  */
-
-    // Iteration des prix produit.
-
-    //for (let k = 0; k < productInStorage.length; k++) {}
+    totalPrice.textContent = Intl.NumberFormat("fr-FR", {
+      style: "currency",
+      currency: "EUR",
+      maximumFractionDigits: 0,
+    }).format(datas.price);
 
     //
-    // Supression des articles du panier avec la methode filter.
+    // Iteration de la quantité de produit avec une boucle for + eventChange.
     //
-
     let cartItem = document.getElementsByClassName("cart__item");
     let deleteItem = document.querySelectorAll(".deleteItem");
     let itemQuantity = document.querySelectorAll(".itemQuantity");
@@ -153,6 +122,26 @@ async function fetchDatas() {
       });
     }
 
+    document.getElementById("totalQuantity").innerHTML = itemQuantity;
+
+    //
+    // Iteration de la quantité d'articles du panier avec une boucle for.
+    //
+    /*
+    for (let l = 0; l < cartItem.length; l++) {
+      let qtyArticle = itemQuantity[l];
+      let qtyTotalArticle = totalQuantity[l];
+
+      qtyArticle.addEventListener("change", (e) => {
+        qtyTotalArticle.totalQuantity = parseInt(e.target.value);
+        localStorage.setItem("basket", JSON.stringify(productInStorage));
+      });
+    }
+*/
+
+    //
+    // Supression des articles du panier avec une boucle for + methode filter.
+    //
     for (let k = 0; k < cartItem.length; k++) {
       let supData = deleteItem[k];
       let colorId = productInStorage[k].color;
@@ -163,9 +152,17 @@ async function fetchDatas() {
           return datas.id != dataId || datas.color != colorId;
         });
         productInStorage = filtration;
+
+        localStorage.setItem("basket", JSON.stringify(productInStorage));
+        alert("Votre produit à bien été suprimer du panier !");
+        window.location.href = "cart.html";
       });
     }
+    getBasket(productInStorage);
 
+    //
+    // Calcul des articles du panier avec une boucle for Of.
+    //
     let basket = JSON.parse(localStorage.getItem("basket"));
     let quantity = 0;
     let price = 0;
@@ -177,12 +174,6 @@ async function fetchDatas() {
     console.log(price);
     totalQuantity.textContent = quantity;
     totalPrice.textContent = price;
-
-    /* alert("Votre produit à bien été suprimer du panier !");
-        window.location.href = "cart.html";
-      });
-      console.log(colorId);
-    */
   }
 }
 fetchDatas();
