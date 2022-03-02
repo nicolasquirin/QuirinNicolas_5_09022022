@@ -1,16 +1,32 @@
+//
+// Fonction de sauvegarde des informations dans l’espace local courant.
+//
+function saveBasket(basket) {
+  localStorage.setItem("basket", JSON.stringify(basket));
+}
+//
+// Fonction d'accès à des données enregistrées dans le local Storage.
+//
+function getBasket() {
+  let basket = localStorage.getItem("basket");
+  if (basket == null) {
+    return [];
+  } else {
+    return JSON.parse(basket);
+  }
+}
+//
 // Récupération de la chaine de requête Url de la page actuel (methode window.location).
-
+//
 const queryString_url_id = window.location.search;
 //
 // Récupération de l'Id du produit selectionner avec la méthode UrlSearchParams.
 //
 const urlSearcheParams = new URLSearchParams(queryString_url_id);
 const newUrlSearchParams = urlSearcheParams.get("id");
-console.log(newUrlSearchParams);
 
-let datas = [];
 //
-// Récupération du produit selectionner pas Id avec la méthode (Fetch + UrlSearchParams).
+// Fonction asynchrone de récupération du produit selectionner pas Id avec la méthode (Fetch + UrlSearchParams).
 //
 const fetchDatas = async () => {
   await fetch(`http://localhost:3000/${newUrlSearchParams}`)
@@ -42,20 +58,15 @@ const fetchDatas = async () => {
 //
 fetchDatas();
 //
-// Déclaration et stockage des variables pour id du produit, option de couleurs du produit, et quantité du produit.
+///////////////// OPTION PRODUIT ////////////////
 //
-
 let id = newUrlSearchParams;
 let colorOption = document.getElementById("colors");
 let quantity = document.getElementById("quantity");
-
 const clickButton = document.getElementById("addToCart");
-
-console.log(quantity);
 //
-// Fonction EventListener du boutton ajout Panier(addToCart).
+// EventListener ajout Panier(addToCart) avec option de produit + quantité + .
 //
-
 clickButton.addEventListener("click", (event) => {
   event.preventDefault();
   let product = {
@@ -63,23 +74,8 @@ clickButton.addEventListener("click", (event) => {
     color: colorOption.value,
     quantity: quantity.valueAsNumber,
   };
-  console.log(quantity.valueAsNumber);
   //
-  // Initialisation de l'acces au local storage avec (set Item) + conversion de la valeur en chaîne JSON.
-  //
-  function saveBasket(basket) {
-    localStorage.setItem("basket", JSON.stringify(basket));
-  }
-  function getBasket() {
-    let basket = localStorage.getItem("basket");
-    if (basket == null) {
-      return [];
-    } else {
-      return JSON.parse(basket);
-    }
-  }
-  //
-  // Fonction qui bloque les tentatives de commande inapproprié.
+  // Fonction qui bloque les tentatives de commande inappropriée.
   //
   function wrongInput(e) {
     if (colors.value == "" || quantity.value <= 0) {
@@ -89,9 +85,8 @@ clickButton.addEventListener("click", (event) => {
     }
   }
   wrongInput();
-
   //
-  // Addition des articles dans le panier.
+  // Fonction qui addition les articles dans le panier avec leurs couleurs.
   //
   function addBasket(product) {
     let basket = getBasket();
@@ -113,74 +108,12 @@ clickButton.addEventListener("click", (event) => {
     //
     saveBasket(basket);
   }
-
   //
   // Récupération des valeurs du panier (get Item) + conversion de la valeur en objet JSON.
   //
   addBasket(product);
-
   //
   // Envoi du client sur la page panier(cart.html) apres l'evènement click.
   //
   window.location.href = "./cart.html";
 });
-console.log(quantity);
-
-// EXAMPLE DU WEBINAIRE
-/*
-function saveBasket(basket) {
-  localStorage.setItem("basket", JSON.stringify(basket));
-}
-function getBasket() {
-  let basket = localStorage.getItem("basket");
-  if (basket == null) {
-    return [];
-  } else {
-    return JSON.parse(basket);
-  }
-}
-function addBasket(product) {
-  let basket = getBasket();
-  let foundProduct = basket.find((p) => p.id == product.id);
-  if (foundProduct != undefined) {
-    foundProduct.quantity++;
-  } else {
-    product.quantity = 1;
-    basket.push(product);
-  }
-  saveBasket(basket);
-}
-function removeBasket(product) {
-  let basket = getBasket();
-  basket = basket.filter((p) => p.id != product.id);
-  saveBasket(basket);
-}
-function changeQuantity(product, quantity) {
-  let basket = getBasket();
-  let foundProduct = basket.find((p) => p.id == product.id);
-  if (foundProduct != undefined) {
-    foundProduct.quantity += quantity;
-    if (foundProduct.quantity <= 0) {
-      removeBasket(foundProduct);
-    } else {
-      saveBasket(basket);
-    }
-  }
-}
-function totalProduct() {
-  let basket = getBasket();
-  let number = 0;
-  for (let product of basket) {
-    number += product.quantity;
-  }
-  return number;
-}
-function totalPrice() {
-  let basket = getBasket();
-  let total = 0;
-  for (let product of basket) {
-    total += product.quantity * product.price;
-  }
-  return total;
-}
-*/

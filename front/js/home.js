@@ -1,8 +1,5 @@
-// Creation de la variable (datas) comme contenant pour le future tableau de donnés produits.
-
-let datas = [];
 //
-// Récupération asynchrone des ressources de l'API avec la methode (fetch).
+// Fonction de récupération asynchrone des ressources de l'API avec la methode (fetch).
 //
 const fetchDatas = async () => {
   datas = await fetch("http://localhost:3000")
@@ -10,17 +7,9 @@ const fetchDatas = async () => {
     .catch((error) =>
       alert("Erreur de chargement des produits de l'API  : " + error)
     );
-  console.log(datas);
-};
-//
-// Initialisation asynchrone des données [datas] dans une boucle (for) pour affichage => (home.html).
-//
-const showDatas = async () => {
-  await fetchDatas();
-  let items = document.getElementById("items");
 
-  for (let i = 0; i < datas.length; i++) {
-    // revoir la boucle en for in....
+  for (let i in datas) {
+    //
     // Création des elements HTML 'a' 'article' 'img' 'h3' 'p' stockés dans des variables;
     //
     let link = document.createElement("a");
@@ -35,7 +24,7 @@ const showDatas = async () => {
     link.appendChild(article_item);
     article_item.append(article_item_img, article_item_h3, article_item_p);
     //
-    // Corrélation des élements [articles] a leurs valeurs recupéré dans [datas].
+    // Corrélation des élements [articles] a leurs valeurs recupéré dans la boucle[i] de [datas].
     //
     link.href = `./product.html?id=${datas[i]._id}`;
     article_item_img.src = datas[i].imageUrl;
@@ -49,4 +38,4 @@ const showDatas = async () => {
 //
 // Initialisation de l'affichage des donées API pour home.html
 //
-showDatas();
+fetchDatas();

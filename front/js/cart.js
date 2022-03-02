@@ -127,28 +127,37 @@ async function fetchDatas() {
 
     let deleteItem = document.querySelectorAll(".deleteItem");
     //
-    // Supression des articles du panier avec une boucle for + methode filter.
+    // Fonction de supression des articles du panier avec une boucle for + methode filter.
     //
-    for (let k = 0; k < cartItem.length; k++) {
-      let supData = deleteItem[k];
-      let colorId = productInStorage[k].color;
-      let dataId = productInStorage[k].id;
+    function deleted() {
+      for (let k = 0; k < cartItem.length; k++) {
+        let supData = deleteItem[k];
+        let colorId = productInStorage[k].color;
+        let dataId = productInStorage[k].id;
 
-      supData.addEventListener("click", () => {
-        let filtration = productInStorage.filter(function (datas) {
-          return datas.id != dataId || datas.color != colorId;
+        supData.addEventListener("click", () => {
+          let filtration = productInStorage.filter(function (datas) {
+            return datas.id != dataId || datas.color != colorId;
+          });
+          productInStorage = filtration;
+          if (productInStorage[k] != null) {
+            saveBasket(productInStorage);
+            window.location.href = "cart.html";
+          } else {
+            productInStorage[k] === null;
+            alert(
+              "Oups ! votre panier est vide, rendez-vous sur la page d'accueil"
+            );
+            window.location.href = "home.html";
+            saveBasket(productInStorage);
+          }
         });
-        productInStorage = filtration;
-
-        localStorage.setItem("basket", JSON.stringify(productInStorage));
-        alert("Votre produit à bien été suprimer du panier !");
-        window.location.href = "cart.html";
-      });
+      }
     }
+    deleted();
     getBasket(productInStorage);
 
-    ///////////////// CALCULATION QUANTITE + PRIX /////////////////
-
+    ///////////////// CALCUL QUANTITE * PRIX /////////////////
     //
     // Calcul des articles du panier avec une boucle for Of / parseInt /float ???????????
     //
@@ -157,8 +166,8 @@ async function fetchDatas() {
       let price = 0;
 
       for (datas of productInStorage) {
-        quantity += parseInt(datas.quantity);
-        price += parseFloat(productInStorage.price) * parseInt(datas.quantity);
+        quantity += datas.quantity;
+        price += productInStorage.price * datas.quantity;
       }
       console.log(productInStorage);
       totalQuantity.textContent = quantity;
