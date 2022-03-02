@@ -15,17 +15,13 @@ function getBasket() {
   }
 }
 
-if (location.href.search("confirmation") > 0) {
-  orderId = window.location.search.replace("?", "");
-  document.getElementById("orderId").innerHTML = orderId;
-  localStorage.removeItem("basket");
-}
-
 //
-// Déclaration de la variable [datas] pour recevoir les valeurs interdite par (OC) dans le local Storage : image, altTxt, nom et prix.
+// Déclaration de la variable [datas] pour recevoir les valeurs : image, altTxt, nom et prix. (interdite par (OC) dans le local Storage).
 //
 let datas = [];
-
+//
+// Fonction fetchDatas()     !!!!!!!!!!!!!!!!!!!!!!!!          .
+//
 async function fetchDatas() {
   let items = document.getElementById("cart__items");
   for (let datas of productInStorage) {
@@ -43,7 +39,7 @@ async function fetchDatas() {
         alert("Erreur de chargement des produits de l'API  : " + error)
       );
 
-    console.log(productInStorage);
+    console.log(datas);
 
     //
     // Déclaration des variables pour stockage des elements HTML créer dans le DOM.
@@ -105,40 +101,31 @@ async function fetchDatas() {
       maximumFractionDigits: 0,
     }).format(datas.price);
 
+    ///////////////// AJOUT DES ARTICLE AU PANIER /////////////////
+
     //
-    // Iteration de la quantité de produit avec une boucle for + eventChange.
+    // Iteration de la quantité de produit deja present dans le storage avec une boucle for + eventChange.
     //
+
     let cartItem = document.getElementsByClassName("cart__item");
-    let deleteItem = document.querySelectorAll(".deleteItem");
     let itemQuantity = document.querySelectorAll(".itemQuantity");
 
     for (let u = 0; u < cartItem.length; u++) {
-      let itemToDel = productInStorage[u];
-      let itemToDelQuantity = itemQuantity[u];
+      let quantityProduct = itemQuantity[u];
+      let inputChange = productInStorage[u];
 
-      itemToDelQuantity.addEventListener("change", (e) => {
-        itemToDel.itemQuantity = parseInt(e.target.value);
-        localStorage.setItem("basket", JSON.stringify(productInStorage));
+      quantityProduct.addEventListener("change", (event) => {
+        event.preventDefault("change");
+        inputChange.quantity = parseInt(event.target.value);
+        saveBasket(productInStorage);
+        calculTotal();
       });
     }
+    getBasket(productInStorage);
 
-    document.getElementById("totalQuantity").innerHTML = itemQuantity;
+    ///////////////// SUPRESSION ARTICLE(S) /////////////////
 
-    //
-    // Iteration de la quantité d'articles du panier avec une boucle for.
-    //
-    /*
-    for (let l = 0; l < cartItem.length; l++) {
-      let qtyArticle = itemQuantity[l];
-      let qtyTotalArticle = totalQuantity[l];
-
-      qtyArticle.addEventListener("change", (e) => {
-        qtyTotalArticle.totalQuantity = parseInt(e.target.value);
-        localStorage.setItem("basket", JSON.stringify(productInStorage));
-      });
-    }
-*/
-
+    let deleteItem = document.querySelectorAll(".deleteItem");
     //
     // Supression des articles du panier avec une boucle for + methode filter.
     //
@@ -160,42 +147,46 @@ async function fetchDatas() {
     }
     getBasket(productInStorage);
 
-    //
-    // Calcul des articles du panier avec une boucle for Of.
-    //
-    let basket = JSON.parse(localStorage.getItem("basket"));
-    let quantity = 0;
-    let price = 0;
+    ///////////////// CALCULATION QUANTITE + PRIX /////////////////
 
-    for (datas of basket) {
-      quantity += parseInt(datas.quantity);
-      price += parseFloat(datas.price) * parseInt(datas.quantity);
+    //
+    // Calcul des articles du panier avec une boucle for Of / parseInt /float ???????????
+    //
+    function calculTotal() {
+      let quantity = 0;
+      let price = 0;
+
+      for (datas of productInStorage) {
+        quantity += parseInt(datas.quantity);
+        price += parseFloat(productInStorage.price) * parseInt(datas.quantity);
+      }
+      console.log(productInStorage);
+      totalQuantity.textContent = quantity;
+      totalPrice.textContent = price;
     }
-    console.log(price);
-    totalQuantity.textContent = quantity;
-    totalPrice.textContent = price;
+    calculTotal();
   }
 }
 fetchDatas();
 
-////////////////////////////// FORMULAIRE ////////////////////////////////
+///////////////// FORMULAIRE /////////////////
 
 //
 // Recuperation des noeuds elements dans le DOM avec son index.
 //
 inputFN = document.querySelectorAll(".cart__order__form__question input")[0];
-inputLN = document.querySelectorAll(".cart__order__form__question input")[0];
+inputLN = document.querySelectorAll(".cart__order__form__question input")[1];
 inputAddress = document.querySelectorAll(
   ".cart__order__form__question input"
-)[0];
-inputCity = document.querySelectorAll(".cart__order__form__question input")[0];
-inputEmail = document.querySelectorAll(".cart__order__form__question input")[0];
+)[2];
+inputCity = document.querySelectorAll(".cart__order__form__question input")[3];
+inputEmail = document.querySelectorAll(".cart__order__form__question input")[4];
 // Erreur :
 errFN = document.querySelectorAll(".cart__order__form__question p")[0];
-errLN = document.querySelectorAll(".cart__order__form__question p")[0];
-errAddress = document.querySelectorAll(".cart__order__form__question p")[0];
-errCity = document.querySelectorAll(".cart__order__form__question p")[0];
-errEmail = document.querySelectorAll(".cart__order__form__question p")[0];
+errLN = document.querySelectorAll(".cart__order__form__question p")[1];
+errAddress = document.querySelectorAll(".cart__order__form__question p")[2];
+errCity = document.querySelectorAll(".cart__order__form__question p")[3];
+errEmail = document.querySelectorAll(".cart__order__form__question p")[4];
 
 contact = {
   firstName: "",
@@ -344,7 +335,7 @@ subBtn.addEventListener("click", (e) => {
     }
   }
   //
-  // Verification des champs de saisie avant envoie.
+  // Verification des champs de saisie.
   //
   if (validForm) {
     if (productInStorage) {
