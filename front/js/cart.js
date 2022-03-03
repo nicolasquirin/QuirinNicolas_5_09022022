@@ -38,9 +38,6 @@ async function fetchDatas() {
       .catch((error) =>
         alert("Erreur de chargement des produits de l'API  : " + error)
       );
-
-    console.log(datas);
-
     //
     // Déclaration des variables pour stockage des elements HTML créer dans le DOM.
     //
@@ -95,11 +92,7 @@ async function fetchDatas() {
     newInput.setAttribute("max", "100");
     newInput.setAttribute("value", datas.quantity);
     newP4.textContent = `Suprimer`;
-    totalPrice.textContent = Intl.NumberFormat("fr-FR", {
-      style: "currency",
-      currency: "EUR",
-      maximumFractionDigits: 0,
-    }).format(datas.price);
+    totalPrice.textContent = productInStorage.price;
 
     ///////////////// AJOUT DES ARTICLE AU PANIER /////////////////
 
@@ -115,10 +108,9 @@ async function fetchDatas() {
       let inputChange = productInStorage[u];
 
       quantityProduct.addEventListener("change", (event) => {
-        event.preventDefault("change");
         inputChange.quantity = parseInt(event.target.value);
         saveBasket(productInStorage);
-        calculTotal();
+        calculTotal(productInStorage);
       });
     }
     getBasket(productInStorage);
@@ -140,11 +132,11 @@ async function fetchDatas() {
             return datas.id != dataId || datas.color != colorId;
           });
           productInStorage = filtration;
-          if (productInStorage[k] != null) {
+          if (cartItem.length > 1) {
             saveBasket(productInStorage);
             window.location.href = "cart.html";
           } else {
-            productInStorage[k] === null;
+            cartItem.length < 1;
             alert(
               "Oups ! votre panier est vide, rendez-vous sur la page d'accueil"
             );
@@ -157,25 +149,33 @@ async function fetchDatas() {
     deleted();
     getBasket(productInStorage);
 
-    ///////////////// CALCUL QUANTITE * PRIX /////////////////
+    ///////////////// CALCUL PRIX * QUANTITE /////////////////
     //
-    // Calcul des articles du panier avec une boucle for Of / parseInt /float ???????????
+    // Calcul des articles du panier avec une boucle for Of.
     //
     function calculTotal() {
       let quantity = 0;
-      let price = 0;
+      let totalP = 0;
 
-      for (datas of productInStorage) {
-        quantity += datas.quantity;
-        price += productInStorage.price * datas.quantity;
+      datas.price = productInStorage.price;
+
+      for (let i = 0; i < productInStorage.length; ++i) {
+        datasProduct = productInStorage[i];
+        console.log(datasProduct);
+        quantity += datasProduct.quantity;
+        totalP += datasProduct.quantity * datasProduct.price;
+        console.log();
+        saveBasket(productInStorage);
       }
-      console.log(productInStorage);
       totalQuantity.textContent = quantity;
-      totalPrice.textContent = price;
+      totalPrice.textContent = totalP;
+      saveBasket(productInStorage);
     }
+
     calculTotal();
   }
 }
+
 fetchDatas();
 
 ///////////////// FORMULAIRE /////////////////
