@@ -117,6 +117,4 @@ clickButton.addEventListener("click", (event) => {
   //
   window.location.href = "./cart.html";
 });
-//
-// SI PANIER VIDE RETOUR PAGE PRODUIT
-//
+

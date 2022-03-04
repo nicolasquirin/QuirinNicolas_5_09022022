@@ -136,9 +136,7 @@ async function fetchDatas() {
             window.location.href = "cart.html";
           } else {
             cartItem.length < 1;
-            alert(
-              "Oups ! votre panier est vide, rendez-vous sur la page d'accueil"
-            );
+            alert("Oups ! panier vide, rendez-vous sur la page d'accueil");
             window.location.href = "home.html";
             saveBasket(productInStorage);
           }
@@ -202,9 +200,8 @@ contact = {
   city: "",
   email: "",
 };
-
 products = [];
-orderId = undefined;
+
 //
 // Déclaration et récupération des elements pour les evènements change.
 //
@@ -304,7 +301,7 @@ function validEmail(email) {
 subBtn.addEventListener("click", (e) => {
   e.preventDefault();
   //
-  // Envoie de la chaine de charactère 'contact' et du tableau [products] par methode POST a l'API.
+  // Fonction asynchrone qui envoie 'contact' et [products] par methode POST a l'API.
   //
   async function clientData() {
     await fetch("http://localhost:3000/api/products/order", {
@@ -320,7 +317,6 @@ subBtn.addEventListener("click", (e) => {
       .then(function (response) {
         return response.json();
       })
-
       .then(function (data) {
         orderId = data.orderId;
         localStorage.setItem("orderId", data.orderId);
@@ -343,24 +339,35 @@ subBtn.addEventListener("click", (e) => {
     }
   }
   //
-  // Verification des champs de saisie.
+  // Fonction de verification du formulaire.
   //
-  if (validForm) {
-    if (productInStorage) {
+  // !!!!!!!!!!!!!!!!!!!!!!!!!!!! Boucle While!!!!!!!!!!!!!!!!!!!!!
+  function validation() {
+    if (validForm === true) {
       alert("Commande en cours");
       collectDatas(products);
       clientData();
-    } else {
-      alert(
-        "Votre panier est vide, vous allez être redirigé sur la page d'accueil"
-      );
+    } else if ((errAddress, errCity, errEmail, errFN, errLN === true)) {
+      alert("Oups ! panier vide, rendez-vous sur la page d'accueil");
       window.location.href = "home.html";
+    } else {
+      validFN(inputFN.value);
+      validLN(inputLN.value);
+      validFN(inputAddress.value);
+      validFN(inputCity.value);
+      validFN(inputEmail.value);
     }
-  } else {
-    validFN(inputFN.value);
-    validLN(inputLN.value);
-    validFN(inputAddress.value);
-    validFN(inputCity.value);
-    validFN(inputEmail.value);
   }
+  validation();
 });
+//
+// Fonction qui renvoi le client a la page d'accueil si le panier est vide.
+//
+function reloadpage() {
+  if (productInStorage == null) {
+    alert("Oups ! panier vide, rendez-vous sur la page d'accueil");
+    window.location.href = "home.html";
+  } else {
+  }
+}
+reloadpage();
