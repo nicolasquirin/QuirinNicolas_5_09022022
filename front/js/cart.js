@@ -92,9 +92,8 @@ async function fetchDatas() {
     newInput.setAttribute("max", "100");
     newInput.setAttribute("value", datas.quantity);
     newP4.textContent = `Suprimer`;
-    totalPrice.textContent = productInStorage.price;
 
-    ///////////////// AJOUT DES ARTICLE AU PANIER /////////////////
+    ///////////////// AJOUT DES ARTICLES AU PANIER /////////////////
 
     //
     // Iteration de la quantité de produit deja present dans le storage avec une boucle for + eventChange.
@@ -154,20 +153,19 @@ async function fetchDatas() {
     // Calcul des articles du panier avec une boucle for Of.
     //
     function calculTotal() {
-      let quantity = 0;
+      let totalQ = 0;
       let totalP = 0;
-
       datas.price = productInStorage.price;
 
       for (let i = 0; i < productInStorage.length; ++i) {
-        datasProduct = productInStorage[i];
-        console.log(datasProduct);
-        quantity += datasProduct.quantity;
-        totalP += datasProduct.quantity * datasProduct.price;
+        datas = productInStorage[i];
+        console.log(productInStorage[i].quantity);
+        totalQ += productInStorage[i].quantity;
+        totalP += productInStorage[i].quantity * productInStorage[i].price;
         console.log();
         saveBasket(productInStorage);
       }
-      totalQuantity.textContent = quantity;
+      totalQuantity.textContent = totalQ;
       totalPrice.textContent = totalP;
       saveBasket(productInStorage);
     }
@@ -207,7 +205,6 @@ contact = {
 
 products = [];
 orderId = undefined;
-inputError = 0;
 //
 // Déclaration et récupération des elements pour les evènements change.
 //
@@ -287,7 +284,9 @@ function validCity(city) {
 }
 
 function validEmail(email) {
-  let emailReg = new RegExp(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/);
+  let emailReg = new RegExp(
+    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+  );
   if (email.length == 0) {
     errEmail.innerHTML = "E-mail non renseigné";
     validForm = false;
