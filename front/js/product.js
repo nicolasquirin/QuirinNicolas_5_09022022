@@ -5,7 +5,7 @@ function saveBasket(basket) {
   localStorage.setItem("basket", JSON.stringify(basket));
 }
 //
-// Fonction d'accès à des données enregistrées dans le local Storage.
+// Fonction d'accès à des données enregistrées dans le local Storage par clée.
 //
 function getBasket() {
   let basket = localStorage.getItem("basket");
@@ -98,10 +98,10 @@ clickButton.addEventListener("click", (event) => {
     );
     if (foundProduct != undefined) {
       foundProduct.quantity += product.quantity;
-      alert(` Vous avez rajouté ${product.quantity} article(s) a votre panier`);
+      alert(` Vous avez rajouté ${product.quantity} article(s) à votre panier`);
     } else {
       basket.push(product);
-      alert(`${product.quantity} Article(s) ajouté a votre panier`);
+      alert(`${product.quantity} Article(s) ajouté à votre panier`);
     }
     //
     // Initialisation de l'accès au local storage avec (set Item) + conversion de la valeur en chaîne JSON.

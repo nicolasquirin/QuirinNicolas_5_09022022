@@ -1,5 +1,5 @@
 //
-// Déclaration de la variable product In Storage associée au valeurs du local Storage.
+// Déclaration de la variable product In Storage associée aux valeurs du local Storage.
 //
 let productInStorage = JSON.parse(localStorage.getItem("basket"));
 
@@ -35,11 +35,9 @@ async function fetchDatas() {
           (productInStorage.altTxt = data.altTxt)
         )
       )
-      .catch((error) =>
-        alert("Erreur de chargement des produits de l'API  : " + error)
-      );
+      .catch((error) => alert("connexion au serveur impossible  : " + error));
     //
-    // Déclaration des variables pour stockage des elements HTML créer dans le DOM.
+    // Déclaration des variables pour stockage des elements HTML crée dans le DOM.
     //
 
     const newArticle = document.createElement("article");
@@ -101,9 +99,9 @@ async function fetchDatas() {
     let cartItem = document.getElementsByClassName("cart__item");
     let itemQuantity = document.querySelectorAll(".itemQuantity");
 
-    for (let u = 0; u < cartItem.length; u++) {
-      let quantityProduct = itemQuantity[u];
-      let inputChange = productInStorage[u];
+    for (let j = 0; j < cartItem.length; j++) {
+      let quantityProduct = itemQuantity[j];
+      let inputChange = productInStorage[j];
 
       quantityProduct.addEventListener("change", (event) => {
         inputChange.quantity = parseInt(event.target.value);
@@ -117,7 +115,7 @@ async function fetchDatas() {
 
     let deleteItem = document.querySelectorAll(".deleteItem");
     //
-    // Fonction de supression des articles du panier avec une boucle for + methode filter.
+    // Fonction qui supprime les articles du panier avec une boucle for + methode filter.
     //
     function deleted() {
       for (let k = 0; k < cartItem.length; k++) {
@@ -154,11 +152,11 @@ async function fetchDatas() {
       let totalP = 0;
       datas.price = productInStorage.price;
 
-      for (let i = 0; i < productInStorage.length; ++i) {
-        datas = productInStorage[i];
-        console.log(productInStorage[i].quantity);
-        totalQ += productInStorage[i].quantity;
-        totalP += productInStorage[i].quantity * productInStorage[i].price;
+      for (let l = 0; l < productInStorage.length; ++l) {
+        datas = productInStorage[l];
+        console.log(productInStorage[l].quantity);
+        totalQ += productInStorage[l].quantity;
+        totalP += productInStorage[l].quantity * productInStorage[l].price;
         console.log();
         saveBasket(productInStorage);
       }
@@ -176,21 +174,27 @@ fetchDatas();
 ///////////////// FORMULAIRE /////////////////
 
 //
-// Recuperation des noeuds elements dans le DOM avec son index.
+// Recuperation des noeuds elements dans le DOM avec index pairs input/erreur
 //
-inputFN = document.querySelectorAll(".cart__order__form__question input")[0];
-inputLN = document.querySelectorAll(".cart__order__form__question input")[1];
-inputAddress = document.querySelectorAll(
+
+const questionInput = document.querySelectorAll(
   ".cart__order__form__question input"
-)[2];
-inputCity = document.querySelectorAll(".cart__order__form__question input")[3];
-inputEmail = document.querySelectorAll(".cart__order__form__question input")[4];
+);
+const questionText = document.querySelectorAll(
+  ".cart__order__form__question p"
+);
+//Input
+inputFN = questionInput[0];
+inputLN = questionInput[1];
+inputAddress = questionInput[2];
+inputCity = questionInput[3];
+inputEmail = questionInput[4];
 // Erreur :
-errFN = document.querySelectorAll(".cart__order__form__question p")[0];
-errLN = document.querySelectorAll(".cart__order__form__question p")[1];
-errAddress = document.querySelectorAll(".cart__order__form__question p")[2];
-errCity = document.querySelectorAll(".cart__order__form__question p")[3];
-errEmail = document.querySelectorAll(".cart__order__form__question p")[4];
+errFN = questionText[0];
+errLN = questionText[1];
+errAddress = questionText[2];
+errCity = questionText[3];
+errEmail = questionText[4];
 
 contact = {
   firstName: "",
@@ -207,7 +211,7 @@ products = [];
 subBtn = document.getElementById("order");
 validForm = false;
 //
-// Fonction de vérification Regex pour les valeurs contact.
+// Fonction de vérification Regex pour les valeurs entrées.
 //
 function validFN(firstName) {
   if (firstName.length == 0) {
@@ -292,13 +296,11 @@ inputEmail.addEventListener("change", (e) => {
 });
 
 //
-// Fonction evènement Click du formulaire client avec un changement du comportement par défaut de l’élément(preventDefault).
+// Fonction event Onsubmit pour l'envoi du formulaire client avec un changement de comportement par défaut de l’élément(preventDefault).
 //
-
 function sendForm() {
   let sendFormBtn = document.querySelector("form");
 
-  // declencheur bouton commander
   sendFormBtn.addEventListener("submit", function (event) {
     event.preventDefault();
     //
@@ -331,21 +333,20 @@ function sendForm() {
       }
     }
     //
-    // Fonction qui recupère le produit avec son Id dans le local storage.
+    // Fonction qui récupère les données [datas] dans [localStorage] avec son Id.
     //
-    function collectDatas() {
+    function collectDatasOnStorage() {
       for (let datas of productInStorage) {
         products.push(datas.id);
       }
     }
     //
-    // Fonction de verification du formulaire.
-    //
+    // Fonction de verification du formulaire, si valide commande en cours sinon erreur inputvalue du formulaire.
     //
     function validationForm() {
       if (validForm == true) {
         alert("Commande en cours");
-        collectDatas(products);
+        collectDatasOnStorage(products);
         clientData();
       } else {
         validFN(inputFN.value);
@@ -360,7 +361,7 @@ function sendForm() {
 }
 sendForm();
 //
-// Fonction qui renvoi le client a la page d'accueil si le panier est vide.
+// Fonction qui renvoie le client a la page d'accueil si le panier est vide.
 //
 function reloadpage() {
   if (productInStorage == null) {

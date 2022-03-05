@@ -4,9 +4,7 @@
 const fetchDatas = async () => {
   datas = await fetch("http://localhost:3000")
     .then((res) => res.json())
-    .catch((error) =>
-      alert("Erreur de chargement des produits de l'API  : " + error)
-    );
+    .catch((error) => alert("connexion au serveur impossible  : " + error));
 
   for (let i in datas) {
     //
