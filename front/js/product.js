@@ -54,7 +54,7 @@ const fetchDatas = async () => {
     );
 };
 //
-// Initialisation de l'affichage des donées API du produit selectionné(Id) pour product.html.
+// Initialisation de l'affichage des données API du produit selectionné(Id) pour product.html.
 //
 fetchDatas();
 //
@@ -104,7 +104,7 @@ clickButton.addEventListener("click", (event) => {
       alert(`${product.quantity} Article(s) ajouté a votre panier`);
     }
     //
-    // Initialisation de l'acces au local storage avec (set Item) + conversion de la valeur en chaîne JSON.
+    // Initialisation de l'accès au local storage avec (set Item) + conversion de la valeur en chaîne JSON.
     //
     saveBasket(basket);
   }
@@ -113,8 +113,7 @@ clickButton.addEventListener("click", (event) => {
   //
   addBasket(product);
   //
-  // Envoi du client sur la page panier(cart.html) apres l'evènement click.
+  // Envoi du client sur la page panier(cart.html) apres l'évenement click.
   //
   window.location.href = "./cart.html";
 });
-

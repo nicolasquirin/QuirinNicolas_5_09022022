@@ -1,20 +1,20 @@
 //
 // Fonction qui récupère et transmet le numéro de commande.
 //
-function confirmation() {
+function confirmOrder() {
   const orderId = document.getElementById("orderId");
   orderId.innerText = localStorage.getItem("orderId");
   localStorage.clear();
 }
-confirmation();
+confirmOrder();
 //
-// Fonction qui renvoi le client sur la page d'accueil apres la confirmation de commande + message apres 2,5 sec.
+// Fonction qui renvoi le client sur la page d'accueil apres la confirmation de commande + message apres 2sec.
 //
 function reload() {
-  reloadpage = window.setTimeout(startReload, 2500);
+  reloadpage = window.setTimeout(startReload, 2000);
 }
 function startReload() {
   (window.location.href = "home.html"),
-    alert("Félicitation pour votre nouvelle achat et à bientôt sur Kanap.fr !");
+    alert("Félicitation pour votre nouvelle achat, à bientôt sur Kanap.fr !");
 }
 reload();

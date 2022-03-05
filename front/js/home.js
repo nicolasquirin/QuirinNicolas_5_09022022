@@ -18,13 +18,13 @@ const fetchDatas = async () => {
     let article_item_h3 = document.createElement("h3");
     let article_item_p = document.createElement("p");
     //
-    // integration des noeuds parents/enfants spécifié.
+    // integration des noeuds parents/enfants spécifiés.
     //
     items.appendChild(link);
     link.appendChild(article_item);
     article_item.append(article_item_img, article_item_h3, article_item_p);
     //
-    // Corrélation des élements [articles] a leurs valeurs recupéré dans la boucle[i] de [datas].
+    // Corrélation des éléments [articles] aux valeurs recupérées dans la boucle[i] de [datas].
     //
     link.href = `./product.html?id=${datas[i]._id}`;
     article_item_img.src = datas[i].imageUrl;
@@ -36,6 +36,6 @@ const fetchDatas = async () => {
   }
 };
 //
-// Initialisation de l'affichage des donées API pour home.html
+// Initialisation de l'affichage des données API pour home.html
 //
 fetchDatas();

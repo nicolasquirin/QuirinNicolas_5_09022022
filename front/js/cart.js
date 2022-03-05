@@ -20,7 +20,7 @@ function getBasket() {
 //
 let datas = [];
 //
-// Fonction fetchDatas()     !!!!!!!!!!!!!!!!!!!!!!!!          .
+// Fonction fetch qui récupère les données produits API par Id.
 //
 async function fetchDatas() {
   let items = document.getElementById("cart__items");
@@ -94,7 +94,6 @@ async function fetchDatas() {
     newP4.textContent = `Suprimer`;
 
     ///////////////// AJOUT DES ARTICLES AU PANIER /////////////////
-
     //
     // Iteration de la quantité de produit deja present dans le storage avec une boucle for + eventChange.
     //
@@ -207,31 +206,6 @@ products = [];
 //
 subBtn = document.getElementById("order");
 validForm = false;
-
-inputFN.addEventListener("change", (e) => {
-  validFN(e.target.value);
-  contact.firstName = e.target.value;
-});
-
-inputLN.addEventListener("change", (e) => {
-  validLN(e.target.value);
-  contact.lastName = e.target.value;
-});
-
-inputAddress.addEventListener("change", (e) => {
-  validAddress(e.target.value);
-  contact.address = e.target.value;
-});
-
-inputCity.addEventListener("change", (e) => {
-  validCity(e.target.value);
-  contact.city = e.target.value;
-});
-
-inputEmail.addEventListener("change", (e) => {
-  validEmail(e.target.value);
-  contact.email = e.target.value;
-});
 //
 // Fonction de vérification Regex pour les valeurs contact.
 //
@@ -247,6 +221,10 @@ function validFN(firstName) {
     validForm = false;
   }
 }
+inputFN.addEventListener("change", (e) => {
+  validFN(e.target.value);
+  contact.firstName = e.target.value;
+});
 
 function validLN(lastName) {
   if (lastName.length == 0) {
@@ -260,6 +238,11 @@ function validLN(lastName) {
     validForm = false;
   }
 }
+inputLN.addEventListener("change", (e) => {
+  validLN(e.target.value);
+  contact.lastName = e.target.value;
+});
+
 function validAddress(address) {
   if (address.length == 0) {
     errAddress.innerHTML = "Addresse non renseigné";
@@ -269,6 +252,10 @@ function validAddress(address) {
     validForm = true;
   }
 }
+inputAddress.addEventListener("change", (e) => {
+  validAddress(e.target.value);
+  contact.address = e.target.value;
+});
 
 function validCity(city) {
   if (city.length == 0) {
@@ -279,6 +266,10 @@ function validCity(city) {
     validForm = true;
   }
 }
+inputCity.addEventListener("change", (e) => {
+  validCity(e.target.value);
+  contact.city = e.target.value;
+});
 
 function validEmail(email) {
   let emailReg = new RegExp(
@@ -295,71 +286,79 @@ function validEmail(email) {
     validForm = false;
   }
 }
+inputEmail.addEventListener("change", (e) => {
+  validEmail(e.target.value);
+  contact.email = e.target.value;
+});
+
 //
 // Fonction evènement Click du formulaire client avec un changement du comportement par défaut de l’élément(preventDefault).
 //
-subBtn.addEventListener("click", (e) => {
-  e.preventDefault();
-  //
-  // Fonction asynchrone qui envoie 'contact' et [products] par methode POST a l'API.
-  //
-  async function clientData() {
-    await fetch("http://localhost:3000/api/products/order", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ contact: contact, products: products }),
-    })
-      //
-      // Recupération de la réponse en JSON.
-      //
-      .then(function (response) {
-        return response.json();
-      })
-      .then(function (data) {
-        orderId = data.orderId;
-        localStorage.setItem("orderId", data.orderId);
-        console.log(orderId);
-      });
 
-    if (orderId != undefined || orderId != "") {
-      location.href = "confirmation.html?" + orderId + "#orderId";
-    } else {
-      alert = "Erreur lors du chargement de vos données";
+function sendForm() {
+  let sendFormBtn = document.querySelector("form");
+
+  // declencheur bouton commander
+  sendFormBtn.addEventListener("submit", function (event) {
+    event.preventDefault();
+    //
+    // Fonction asynchrone qui envoie 'contact' et [products] par methode POST a l'API.
+    //
+    async function clientData() {
+      await fetch("http://localhost:3000/api/products/order", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ contact: contact, products: products }),
+      })
+        //
+        // Recupération de la réponse en JSON.
+        //
+        .then(function (response) {
+          return response.json();
+        })
+        .then(function (data) {
+          orderId = data.orderId;
+          localStorage.setItem("orderId", data.orderId);
+          console.log(orderId);
+        });
+
+      if (orderId != undefined || orderId != "") {
+        location.href = "confirmation.html?" + orderId + "#orderId";
+      } else {
+        alert = "Erreur lors du chargement de vos données";
+      }
     }
-  }
-  //
-  // Recupération du produit par ID dans le local storage.
-  //
-  function collectDatas() {
-    for (let datas of productInStorage) {
-      products.push(datas.id);
-      console.log(datas.id);
+    //
+    // Fonction qui recupère le produit avec son Id dans le local storage.
+    //
+    function collectDatas() {
+      for (let datas of productInStorage) {
+        products.push(datas.id);
+      }
     }
-  }
-  //
-  // Fonction de verification du formulaire.
-  //
-  // !!!!!!!!!!!!!!!!!!!!!!!!!!!! Boucle While!!!!!!!!!!!!!!!!!!!!!
-  function validation() {
-    if (validForm === true) {
-      alert("Commande en cours");
-      collectDatas(products);
-      clientData();
-    } else if ((errAddress, errCity, errEmail, errFN, errLN === true)) {
-      alert("Oups ! panier vide, rendez-vous sur la page d'accueil");
-      window.location.href = "home.html";
-    } else {
-      validFN(inputFN.value);
-      validLN(inputLN.value);
-      validFN(inputAddress.value);
-      validFN(inputCity.value);
-      validFN(inputEmail.value);
+    //
+    // Fonction de verification du formulaire.
+    //
+    //
+    function validationForm() {
+      if (validForm == true) {
+        alert("Commande en cours");
+        collectDatas(products);
+        clientData();
+      } else {
+        validFN(inputFN.value);
+        validLN(inputLN.value);
+        validAddress(inputAddress.value);
+        validCity(inputCity.value);
+        validEmail(inputEmail.value);
+      }
     }
-  }
-  validation();
-});
+    validationForm();
+  });
+}
+sendForm();
 //
 // Fonction qui renvoi le client a la page d'accueil si le panier est vide.
 //
