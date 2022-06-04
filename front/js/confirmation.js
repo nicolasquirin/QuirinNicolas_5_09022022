@@ -26,7 +26,7 @@ function reload() {
   reloadpage = window.setTimeout(startReload, 2000);
 }
 function startReload() {
-  (window.location.href = "home.html"),
-    alert("Félicitation pour votre nouvelle achat, à bientôt sur Kanap.fr !");
+  alert("Félicitation pour votre nouvelle achat, à bientôt sur Kanap.fr !");
+  window.location.href = "home.html";
 }
 reload();

@@ -2,7 +2,7 @@
 // Fonction de récupération asynchrone des ressources de l'API avec la methode (fetch).
 //
 const fetchDatas = async () => {
-  datas = await fetch("http://localhost:3000")
+  datas = await fetch("http://localhost:3000/api/products")
     .then((res) => res.json())
     .catch((error) => alert("connexion au serveur impossible  : " + error));
 
