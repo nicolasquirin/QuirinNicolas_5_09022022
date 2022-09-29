@@ -2,6 +2,13 @@
 // Fonction de récupération asynchrone des ressources de l'API avec la methode (fetch).
 //
 const fetchDatas = async () => {
+  // Fonction spinner pour serveur trop lent comme heroku
+
+  window.addEventListener("load", () => {
+    const loader = document.querySelector(".loader");
+    loader.classList.add("loader-hidden");
+  });
+
   datas = await fetch("http://localhost:3000/api/products")
     .then((res) => res.json())
     .catch((error) => alert("connexion au serveur impossible  : " + error));
